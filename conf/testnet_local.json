@@ -1,0 +1,18 @@
+{
+    "master_nodes": [{
+        "name": "first_master",
+        "host": "127.0.0.1",
+        "port": 31413,
+        "sig": "3045022100afd690f7dc7110230baed3522775bfb695bb16108f6ea298f92347d8dd036ee302202ccb97047221919ef1031ffff28d10c4004a161550327968e29526cb58694dfb",
+        "pub_key": "03b2f488a004c17be93dad78d9a05a758971249b65813fe4e5cbfee4298ec63206"
+    }, {
+        "name": "sec_master",
+        "host": "127.0.0.1",
+        "port": 31414,
+        "sig": "304402204228c12fa0532d1d7d775df33fac6d8b7699e38f7436405af546ffe264cc0c5202205def3d087d55840e6a8781315689ad2217fbfa17f1b9afdb89ce26811184f738",
+        "pub_key": "03d7eea5b445f84eab802b5474426a8a5878e105d96baf7c919484036ffbe95ab3"
+    }],
+    "geo_based": false,
+    "load_based": true,
+    "proto": "ws"
+}
