@@ -22,3 +22,7 @@ BLOCKCHAIN_HEIGHT_FILE = "{dir}/blockchain_height".format(dir=BLOCKCHAIN_DIR)
 # will be sent to any of the master nodes. If traffic doesn't start with this
 # particular sequence, then the traffic will be disregarded.
 MAGIC_BYTES = "\x69\x0f\x69"
+
+if PVERS != 3:
+    raise ValueError('Python 2 is not supported anymore.')
+

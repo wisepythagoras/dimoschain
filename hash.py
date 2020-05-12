@@ -19,10 +19,7 @@ def sha3_512(string, raw_digest=False):
     hash = hashlib.sha3_512()
 
     # Add the string to the digest.
-    if PVERS == 3:
-        hash.update(string)
-    else:
-        hash.update(b"{}".format(string))
+    hash.update(string)
 
     # And finally return the hex or raw digest.
     return hash.hexdigest() if not raw_digest else hash.digest()
