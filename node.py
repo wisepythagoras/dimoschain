@@ -9,9 +9,7 @@ from encryption import AESCipher
 from blockchain import Blockchain
 import utils
 from definitions import BASE_DIR
-
-if utils.PVERS == 3:
-    import codecs
+import codecs
 
 
 class Node(object):
@@ -59,10 +57,7 @@ class Node(object):
         # Get the key.
         key = self.get_raw_public_key()
 
-        if utils.PVERS == 3:
-            return key.hex()
-        else:
-            return key.encode("hex")
+        return key.hex()
 
     def get_private_key(self):
         """ Get the private key of the node """
@@ -80,7 +75,7 @@ class Node(object):
             return sig
 
         # Choose what type of signature to return.
-        return sig.hex() if utils.PVERS == 3 else sig.encode('hex')
+        return sig.hex()
 
     def verify(self, signature, message, public_key=None):
         """ Verify that the message with the public key """
@@ -108,10 +103,7 @@ class Node(object):
             print("{}.wallet".format(path_name))
             return False
 
-        mode = "w"
-
-        if utils.PVERS == 3:
-            mode = "wb"
+        mode = "wb"
 
         # Open the wallet file so that we can save the payload into it.
         with open("{}.wallet".format(path_name), mode) as f:
@@ -151,10 +143,7 @@ class Node(object):
         if path is not None and not os.path.isfile(path):
             return False
 
-        if utils.PVERS == 3:
-            f = codecs.open(path, "rb", errors="ignore")
-        else:
-            f = open(path, "r")
+        f = codecs.open(path, "rb", errors="ignore")
 
         # Read the data from the wallet file.
         data = f.read()
@@ -168,10 +157,7 @@ class Node(object):
 
         try:
             # Read the packed keys.
-            if utils.PVERS == 3:
-                keys = msgpack.unpackb(data, raw=False)
-            else:
-                keys = msgpack.unpackb(data)
+            keys = msgpack.unpackb(data, raw=False)
 
             # And set them locally.
             self.set_private_key(keys["private"])
@@ -190,3 +176,4 @@ class Node(object):
         """ Get the balance of the current account. """
 
         pass
+

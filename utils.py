@@ -90,3 +90,4 @@ def get_urand():
     """ Gets bytes from /dev/urandom """
 
     return os.urandom(33);
+

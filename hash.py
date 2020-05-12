@@ -2,11 +2,6 @@ import sys
 import binascii
 import math
 import hashlib
-
-if sys.version_info < (3, 6):
-    import sha3
-
-from utils import PVERS
 from prand import PRand
 
 LEN = 64

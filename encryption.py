@@ -1,4 +1,3 @@
-from utils import PVERS
 from hash import sha3_512
 from Crypto import Random
 from Crypto.Cipher import AES
@@ -16,10 +15,7 @@ class AESCipher(object):
     def __init__(self, key):
         """ Create a new AESCipher object. """
 
-        if PVERS == 3:
-            self.key = "{!s: <32}".format(key.encode()).encode("utf-8")
-        else:
-            self.key = "{: <32}".format(key.encode()).encode("utf-8")
+        self.key = "{!s: <32}".format(key.encode()).encode("utf-8")
 
     def encrypt(self, message):
         """ Encrypt a message. """
