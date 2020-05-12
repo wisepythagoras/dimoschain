@@ -34,7 +34,7 @@ class AESCipher(object):
         cipher = AES.new(self.key, AES.MODE_OFB, iv)
 
         # Return the encrypted string.
-        return "" + iv + cipher.encrypt(message)
+        return b"" + iv + cipher.encrypt(message)
 
     def decrypt(self, ciphertext):
         """ Decrypt some ciphertext. """
@@ -51,7 +51,8 @@ class AESCipher(object):
     def _pad(self, string):
         """ Pad a string. """
 
-        return string + (self.bs - len(string) % self.bs) * chr(self.bs - len(string) % self.bs)
+        return string + ((self.bs - len(string) % self.bs) \
+            * chr(self.bs - len(string) % self.bs)).encode()
 
     def _unpad(self, string):
         """ Unpad a string. """
