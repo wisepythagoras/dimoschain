@@ -13,6 +13,9 @@ def sha3_512(string, raw_digest=False):
     # Create the SHA3 hash.
     hash = hashlib.sha3_512()
 
+    if isinstance(string, str):
+        string = string.encode()
+
     # Add the string to the digest.
     hash.update(string)
 

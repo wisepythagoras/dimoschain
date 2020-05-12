@@ -3,8 +3,8 @@
         "name": "first_master",
         "host": "127.0.0.1",
         "port": 31413,
-        "sig": "3045022100afd690f7dc7110230baed3522775bfb695bb16108f6ea298f92347d8dd036ee302202ccb97047221919ef1031ffff28d10c4004a161550327968e29526cb58694dfb",
-        "pub_key": "03b2f488a004c17be93dad78d9a05a758971249b65813fe4e5cbfee4298ec63206"
+        "sig": "3045022100ab4f769f08da250af2d3f1090a0fede7e926180f2adbb8e17d0dc807f5e1166502204bc541d1aed6430500af8181713fa8d78aca68c201e380921ba59488cd409e52",
+        "pub_key": "02d4b88bd1f5e960830b3e2a62ed342bddf6da07a08143258b6d6119897fc09488"
     }, {
         "name": "sec_master",
         "host": "127.0.0.1",

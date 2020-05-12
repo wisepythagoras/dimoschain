@@ -70,7 +70,7 @@ if "c" in opts and type(opts["c"]) is str:
         # Verify the signature with the public key.
         verified = node.verify(sig, address_hash, node.get_raw_public_key())
 
-        print("Sig: " + sig.encode('hex'))
+        print("Sig: " + (sig.encode('hex') if isinstance(sig, str) else sig.hex()))
         print("Verified: " + ("Yes" if verified else "No"))
 
 elif "o" in opts and type(opts["o"]) is str:
@@ -83,3 +83,4 @@ elif "o" in opts and type(opts["o"]) is str:
 
 elif "o" in opts or "c" in opts:
     print("Unrecognized values")
+
