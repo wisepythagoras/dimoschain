@@ -20,7 +20,7 @@ def sha3_512(string, raw_digest=False):
 
     # Add the string to the digest.
     if PVERS == 3:
-        hash.update(string.encode("utf-8"))
+        hash.update(string)
     else:
         hash.update(b"{}".format(string))
 

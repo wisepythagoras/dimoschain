@@ -33,7 +33,7 @@ class Block(object):
         if hash is None:
             return False
 
-        block_cell = self.db.get(b'{}'.format(hash))
+        block_cell = self.db.get(str.encode(hash))
 
         if block_cell is None:
             return False

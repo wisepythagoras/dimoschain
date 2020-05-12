@@ -102,7 +102,7 @@ class Blockchain(object):
 
         # Set the block into the blockchain DB. The payload, which is the raw
         # block, will be in a binary format created by msgpack.
-        self.db.put(b'{}'.format(hash), msgpack.packb(raw_block))
+        self.db.put(str.encode(hash), msgpack.packb(raw_block))
 
         # Try to see if the put was successfull.
         if block.load():
