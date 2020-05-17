@@ -78,3 +78,4 @@ class Transaction(object):
 
         return [self.origin, self.amount, self.dest, self.id, self.sig,
                 self.verifier, self.verifier_sig]
+

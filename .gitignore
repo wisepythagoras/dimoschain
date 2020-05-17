@@ -103,3 +103,4 @@ ENV/
 .vscode-upload.json
 blockchain/*
 .vscode/
+*.py.swp
