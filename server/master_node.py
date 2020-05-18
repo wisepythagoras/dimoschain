@@ -169,7 +169,7 @@ if __name__ == '__main__':
     sio.attach(app)
 
     async def index(request):
-        return web.Response(text="This is a Dimos master node", content_type='text/html')
+        return web.Response(text="This is a Dimosthenes master node", content_type='text/html')
 
     @sio.on('connect')
     async def connect(sid, environ):
@@ -187,3 +187,4 @@ if __name__ == '__main__':
     app.router.add_get('/', index)
 
     web.run_app(app, port=mn_config["port"], host=mn_config["host"])
+

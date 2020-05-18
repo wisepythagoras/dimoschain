@@ -74,3 +74,4 @@ if __name__ == '__main__':
     print("Private: " + node.get_private_key())
 
     loop.run_until_complete(start_client())
+
