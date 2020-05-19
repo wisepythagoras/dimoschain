@@ -1,5 +1,5 @@
 {
-    "master_nodes": [{
+    "transport_nodes": [{
         "name": "first_master",
         "host": "127.0.0.1",
         "port": 31413,

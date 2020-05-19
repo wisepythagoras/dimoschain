@@ -6,7 +6,7 @@ sys.path.append(sys.path[0] + r'/../')
 from blockchain import Blockchain
 from block import Block
 from node import Node
-from master_node import MasterNode
+from transport_node import TransportNode
 from utils import getopts
 from hash import sha3_512
 
@@ -17,7 +17,7 @@ if "h" in opts:
     print("Wallet usage:")
     print("-c <name> Create a new wallet")
     print("-o <path> Open an existing wallet")
-    print("-m <ip address> Create a master node")
+    print("-m <ip address> Create a transport node")
     print("-p <password> The password to encrypt/decrypt the wallet with")
     print("-h Show this help message")
     sys.exit(0)
@@ -31,13 +31,13 @@ if not blockchain.load_current_state():
     sys.exit(1)
 
 has_password = False
-is_master = False
+is_transport = False
 node = None
 
 # Create a new node.
 if "m" in opts:
-    is_master = True
-    node = MasterNode()
+    is_transport = True
+    node = TransportNode()
 else:
     node = Node()
 
@@ -49,7 +49,7 @@ if "c" in opts and type(opts["c"]) is str:
     node.create_keys()
 
     # Define the name.
-    name = opts["c"] + ('_m' if is_master else '')
+    name = opts["c"] + ('_m' if is_transport else '')
 
     # Save the keys.
     if not node.save_keys(name, password=(opts["p"] if has_password else None)):
@@ -60,7 +60,7 @@ if "c" in opts and type(opts["c"]) is str:
     print("Public: " + node.get_public_key())
     print("Private: " + node.get_private_key())
 
-    if is_master:
+    if is_transport:
         # Create the hash of the IP address.
         address_hash = sha3_512(opts["m"])
 

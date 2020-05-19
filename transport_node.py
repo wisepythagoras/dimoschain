@@ -3,10 +3,10 @@ import utils
 from definitions import BASE_DIR
 
 
-class MasterNode(Node):
+class TransportNode(Node):
 
     """
-        The master node accepts connections, distributes the blockchain, updates
+        The transport node accepts connections, distributes the blockchain, updates
         to the blockchain (ie. new blocks) and accept new transactions from
         peers.
     """
@@ -15,7 +15,7 @@ class MasterNode(Node):
     state = None
 
     def __init__(self, private_key=None):
-        """ The constructor of the MasterNode class. """
+        """ The constructor of the TransportNode class. """
 
         # Initialize the parent class.
         Node.__init__(self, private_key)
@@ -31,7 +31,7 @@ class MasterNode(Node):
         return self.is_voting_member
 
     def add_randomness(rand):
-        """ Add randomness to the master node's state. """
+        """ Add randomness to the transport node's state. """
 
         self.state = [chr(ord(r1) ^ ord(r2)) for r1, r2 in zip(rand, self.state)]
 
