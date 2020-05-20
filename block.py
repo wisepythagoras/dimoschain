@@ -148,7 +148,7 @@ class Block(object):
 
         # Loop through the transactions and add them to the tree.
         for tx in self.transactions:
-            mr.add_leaf(json.dumps(tx.get()), True)
+            mr.add_leaf(tx.hash(), True)
 
         # Create the tree.
         mr.make_tree()
@@ -191,3 +191,4 @@ class Block(object):
 
         # Return the new hash.
         return calculated_hash
+

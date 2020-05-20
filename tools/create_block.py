@@ -43,3 +43,4 @@ if blockchain.load_current_state():
 
     print("The hash of the new block is:")
     print(new_block.hash)
+

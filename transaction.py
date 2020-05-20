@@ -1,5 +1,8 @@
 import json
 
+import msgpack
+from hash import sha3_512
+
 
 class Transaction(object):
 
@@ -72,6 +75,11 @@ class Transaction(object):
         # TODO: use the private key to sign the transaction.
 
         pass
+
+    def hash(self):
+        """ Get the hash of the transaction. """
+
+        return sha3_512(msgpack.packb(self.get()))
 
     def get(self):
         """ Return the JSON representation of the transaction. """
