@@ -80,6 +80,7 @@
 
 """
 
+# https://python-socketio.readthedocs.io/en/latest/client.html
 # https://github.com/miguelgrinberg/python-socketio/blob/transport/examples/server/aiohttp/latency.py
 # https://github.com/miguelgrinberg/python-socketio/blob/transport/examples/client/asyncio/latency_client.py
 
@@ -89,9 +90,15 @@ import time
 
 sys.path.insert(0, sys.path[0] + r'/../')
 
+import msgpack
 from aiohttp import web
 import socketio
 from utils import getopts
+from definitions import (
+    ERROR_NO_PUBKEY,
+    ERROR_NO_SIGNATURE,
+    WELCOME_MESSAGE,
+)
 
 from hash import sha3_512
 from transport_node import TransportNode
@@ -171,18 +178,57 @@ if __name__ == '__main__':
     async def index(request):
         return web.Response(text="This is a Dimosthenes transport node", content_type='text/html')
 
+    async def respond(room: str, event: str, payload: dict):
+        """ Send a response to a room. """
+
+        await sio.emit(event, msgpack.packb(payload), room=room)
+
+    def error_payload(error: str):
+        """ Create an error payload. """
+
+        return {
+            'e': error
+        }
+
     @sio.on('connect')
-    async def connect(sid, environ):
+    async def connect(sid: str, environ):
         print('connect ', sid)
+
+    @sio.on('tn_auth')
+    async def transport_node_auth(sid, payload):
+        """
+            This is the endpoint that's hit in order for a transport node
+            to be authenticated.
+        """
+
+        # The payload may come as a string, in which case we need to decode it.
+        if isinstance(payload, str):
+            payload = msgpack.unpackb(payload, raw=False)
+
+        # Validate the inputs from the other transport nodes.
+        if 'pk' not in payload:
+            await respond(sid, 'tn_auth_res', error_payload(ERROR_NO_PUBKEY))
+            sio.disconnect(sid)
+            return
+        elif 's' not in payload:
+            await respond(sid, 'tn_auth_res', error_payload(ERROR_NO_SIGNATURE))
+            sio.disconnect(sid)
+            return
+
+        response = {
+            'm': WELCOME_MESSAGE
+        }
+
+        respond(sid, 'tn_auth_res', response)
 
     @sio.on('hello')
     async def ping(sid):
-        print('hello', sid)
+        print('[CN]:', sid)
         await sio.emit('hello', 'there', room=sid)
 
     @sio.on('disconnect')
     def test_disconnect(sid):
-        print('disconnected', sid)
+        print('[DC]', sid)
 
     app.router.add_get('/', index)
 

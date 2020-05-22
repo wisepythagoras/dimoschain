@@ -23,6 +23,11 @@ BLOCKCHAIN_HEIGHT_FILE = "{dir}/blockchain_height".format(dir=BLOCKCHAIN_DIR)
 # particular sequence, then the traffic will be disregarded.
 MAGIC_BYTES = "\x69\x0f\x69"
 
+ERROR_NO_PUBKEY = 'NOPUB'
+ERROR_NO_SIGNATURE = 'NOSIG'
+
+WELCOME_MESSAGE = 'HELLO'
+
 if PVERS != 3:
     raise ValueError('Python 2 is not supported anymore.')
 
