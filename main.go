@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"encoding/hex"
+	"github.com/wisepythagoras/dimoschain/dimos"
 )
 
 func main() {
