@@ -20,7 +20,7 @@ func Base58Decode(str string) []byte {
 }
 
 // GetSHA3512Hash returns the SHA3-512 hash of a given string.
-func GetSHA3512Hash(str string) ([]byte, error) {
+func GetSHA3512Hash(str []byte) ([]byte, error) {
 	// Create a new sha object.
 	h := sha3.New512()
 

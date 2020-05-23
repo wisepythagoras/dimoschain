@@ -106,3 +106,4 @@ blockchain/*
 .vscode/
 *.py.swp
 dimosthenes
+bin/dimos_test
