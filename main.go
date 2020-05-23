@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"encoding/hex"
 	"github.com/wisepythagoras/dimoschain/dimos"
+	"github.com/wisepythagoras/dimoschain/crypto"
 )
 
 func main() {
 	fmt.Println("Hello, world!")
 	//GenerateKey()
 
-	keyPair := KeyPair{}
+	keyPair := crypto.KeyPair{}
 	err := keyPair.Generate()
 
 	if err != nil {
@@ -35,10 +36,10 @@ func main() {
 
 	der := sig.Serialize()
 	fmt.Println("Signature: ", hex.EncodeToString(der))
-	res := VerifySignature(keyPair.Public, der, []byte("Hello, world!"))
+	res := crypto.VerifySignature(keyPair.Public, der, []byte("Hello, world!"))
 	fmt.Println("Verified:", res)
 
-	fmt.Println(GenAddr(keyPair.Public.SerializeCompressed()))
+	fmt.Println(crypto.GenAddr(keyPair.Public.SerializeCompressed()))
 
 	tx := dimos.Transaction{}
 
