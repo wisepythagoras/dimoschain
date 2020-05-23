@@ -7,6 +7,10 @@ import (
 	"github.com/decred/dcrd/dcrec/secp256k1/ecdsa"
 )
 
+// Documentation:
+//  https://godoc.org/github.com/decred/dcrd/dcrec/secp256k1
+//  https://godoc.org/github.com/decred/dcrd/dcrec/secp256k1/ecdsa
+
 // KeyPair represents a structure for managing encryption keys.
 type KeyPair struct {
 	Public *secp256k1.PublicKey

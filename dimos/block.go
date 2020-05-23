@@ -1,9 +1,12 @@
 package dimos
 
 import (
+	"bytes"
+	"errors"
 	"github.com/cbergoon/merkletree"
 )
 
+// Block represents each individual block in the chain.
 type Block struct {
 	MerkleRoot []byte `json: "m"`
 	merkleTree *merkletree.MerkleTree
@@ -29,7 +32,16 @@ func (b *Block) ComputeMerkleRoot() ([]byte, error) {
 	}
 
 	b.merkleTree = tree
-	b.MerkleRoot = tree.MerkleRoot()
+	root := tree.MerkleRoot()
+
+	// If there is a merkle root present on the instance and it doesn't match with
+	// the computed root, then this means that there is an inconsistency or even
+	// attempted forgery.
+	if b.MerkleRoot != nil && bytes.Compare(b.MerkleRoot, root) == 0 {
+		return nil, errors.New("Invalid root computed")
+	}
+
+	b.MerkleRoot = root
 
 	return b.MerkleRoot, nil
 }
