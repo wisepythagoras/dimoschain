@@ -99,14 +99,14 @@ func PrivKeyFromBytes(priv []byte) *KeyPair {
 }
 
 // ParsePubKey parses a pubic key.
-func ParsePubKey(pub []byte) (*secp256k1.PublicKey, error) {
+func ParsePubKey(pub []byte) (*KeyPair, error) {
 	pubkey, err := secp256k1.ParsePubKey(pub)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return pubkey, nil
+	return &KeyPair{pubkey, nil}, nil
 }
 
 // VerifySignature verifies a DER signature.

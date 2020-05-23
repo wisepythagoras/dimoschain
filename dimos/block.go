@@ -5,6 +5,8 @@ import (
 )
 
 type Block struct {
-	MerkleRoot []byte
-	Transactions []Transaction
+	MerkleRoot []byte `json: "m"`
+	Transactions []Transaction `json: "txs"`
+	Hash []byte `json: "h"`
+	Signature []byte `json: "s"`
 }
