@@ -2,7 +2,8 @@ package dimos
 
 import (
 	"bytes"
-	"encoding/json"
+	"encoding/hex"
+	"fmt"
 
 	"github.com/cbergoon/merkletree"
 	"github.com/wisepythagoras/dimoschain/crypto"
@@ -32,19 +33,14 @@ func (tx Transaction) CalculateHash() ([]byte, error) {
 	hashFormat = append(hashFormat, tx.To...)
 	hashFormat = append(hashFormat, tx.Signature...)
 
-	// Make the JSON format of the transaction we're going to hash.
-	jsonTx, err := json.Marshal(hashFormat)
-
-	if err != nil {
-		return nil, err
-	}
-
 	// Calculate the hash.
-	hash, err := crypto.GetSHA3512Hash(jsonTx)
+	hash, err := crypto.GetSHA3512Hash(hashFormat)
 
 	if err != nil {
 		return nil, err
 	}
+
+	tx.Hash = hash
 
 	return hash, nil
 }
@@ -52,4 +48,13 @@ func (tx Transaction) CalculateHash() ([]byte, error) {
 // Equals checks two transactions for equality.
 func (tx Transaction) Equals(otherTx merkletree.Content) (bool, error) {
 	return bytes.Compare(tx.Hash, otherTx.(Transaction).Hash) == 1, nil
+}
+
+// String returns the string representation of the transaction.
+func (tx Transaction) String() string {
+	return "Hash: " + hex.EncodeToString(tx.Hash) + "\n" +
+		"Amount: " + fmt.Sprintf("%.10f", tx.Amount) + "\n" +
+		"From: " + hex.EncodeToString(tx.From) + "\n" +
+		"To: " + hex.EncodeToString(tx.To) + "\n" +
+		"Signature: " + hex.EncodeToString(tx.Signature)
 }

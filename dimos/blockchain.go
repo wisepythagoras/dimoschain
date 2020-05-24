@@ -1,6 +1,8 @@
 package dimos
 
 import (
+	"errors"
+
 	badger "github.com/dgraph-io/badger"
 	"github.com/wisepythagoras/dimoschain/utils"
 )
@@ -19,8 +21,43 @@ func (b *Blockchain) GetDB() []byte {
 	return b.genesisHash
 }
 
+// GetBlock get's a block by its hash.
+func (b *Blockchain) GetBlock(hash []byte) (*Block, error) {
+	if hash == nil {
+		return nil, errors.New("Nil hash")
+	}
+
+	// Create a new transaction.
+	txn := b.db.NewTransaction(true)
+
+	// Get the item of the entry with the hash as the key.
+	item, err := txn.Get(hash)
+
+	// Get the vaue from the item.
+	value, err := item.ValueCopy(nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Parse the block.
+	return BlockFromBytes(value)
+}
+
 // CreateBlock adds a block to the chain.
 func (b *Blockchain) AddBlock(block *Block) (bool, error) {
+	if block == nil {
+		return false, errors.New("Invalid block")
+	}
+
+	isGenesisBlock := block.IDx == 1
+
+	// If the id is 1, this means that we are trying to add the genesis block, so we
+	// don't need a current or genesis hash.
+	if !isGenesisBlock && (b.CurrentHash == nil || b.genesisHash == nil) {
+		return false, errors.New("The blockchain has not been initialized")
+	}
+
 	// Create a new transaction.
 	txn := b.db.NewTransaction(true)
 

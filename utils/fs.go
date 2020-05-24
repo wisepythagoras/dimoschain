@@ -29,7 +29,7 @@ func GetChainDir(createIfNotExists bool) (string, error) {
 	if createIfNotExists {
 		// Create the directory if it doesn't exist.
 		if !CheckIfFileExists(path) {
-			os.Mkdir(path, os.ModeDir)
+			os.Mkdir(path, 0777)
 		}
 	}
 

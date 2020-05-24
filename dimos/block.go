@@ -146,7 +146,7 @@ func (b *Block) ComputeMerkleRoot() ([]byte, error) {
 	// If there is a merkle root present on the instance and it doesn't match with
 	// the computed root, then this means that there is an inconsistency or even
 	// attempted forgery.
-	if b.MerkleRoot != nil && bytes.Compare(b.MerkleRoot, root) == 0 {
+	if b.MerkleRoot != nil && bytes.Compare(b.MerkleRoot, root) != 0 {
 		return nil, errors.New("Invalid root computed")
 	}
 
@@ -165,4 +165,18 @@ func (b *Block) VerifyMerkleTreeTx(tx *Transaction) bool {
 	}
 
 	return vc
+}
+
+// BlockFromBytes converts a block directly from the fs into an unserialized Block object.
+func BlockFromBytes(b []byte) (*Block, error) {
+	if b == nil {
+		return nil, errors.New("Nil block bytes")
+	}
+
+	block := &Block{}
+
+	// Try to unmarshal the msgpack payload.
+	err := msgpack.Unmarshal(b, block)
+
+	return block, err
 }
