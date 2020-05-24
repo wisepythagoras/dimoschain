@@ -21,6 +21,11 @@ func (b *Blockchain) GetDB() []byte {
 	return b.genesisHash
 }
 
+// GetCurrentBlock gets the current block.
+func (b *Blockchain) GetCurrentBlock() (*Block, error) {
+	return b.GetBlock(b.CurrentHash)
+}
+
 // GetBlock get's a block by its hash.
 func (b *Blockchain) GetBlock(hash []byte) (*Block, error) {
 	if hash == nil {
@@ -32,6 +37,10 @@ func (b *Blockchain) GetBlock(hash []byte) (*Block, error) {
 
 	// Get the item of the entry with the hash as the key.
 	item, err := txn.Get(hash)
+
+	if err != nil {
+		return nil, err
+	}
 
 	// Get the vaue from the item.
 	value, err := item.ValueCopy(nil)
@@ -58,8 +67,21 @@ func (b *Blockchain) AddBlock(block *Block) (bool, error) {
 		return false, errors.New("The blockchain has not been initialized")
 	}
 
+	if !isGenesisBlock {
+		currentBlock, err := b.GetCurrentBlock()
+
+		if err != nil {
+			return false, err
+		}
+
+		block.IDx = currentBlock.IDx + 1
+		block.PrevHash = currentBlock.Hash
+		block.ComputeHash()
+	}
+
 	// Create a new transaction.
 	txn := b.db.NewTransaction(true)
+	defer txn.Discard()
 
 	// Get the serialized block.
 	serialized, err := block.GetSerialized(true)
@@ -69,14 +91,14 @@ func (b *Blockchain) AddBlock(block *Block) (bool, error) {
 	}
 
 	// Set the block onto the database.
-	err = txn.Set(block.Hash, serialized)
-
-	if err != nil {
+	if err = txn.Set(block.Hash, serialized); err != nil {
 		return false, err
 	}
 
 	// Commit the changes to the database.
-	_ = txn.Commit()
+	if err = txn.Commit(); err != nil {
+		return false, err
+	}
 
 	// Write the current hash into the current hash file on the disk.
 	utils.WriteCurrentHash(block.Hash)
@@ -108,8 +130,6 @@ func CreateChainInstance(genesisHash []byte, currentHash []byte) (*Blockchain, e
 		genesisHash: genesisHash,
 		db:          db,
 	}
-
-	defer db.Close()
 
 	return &blockchain, nil
 }

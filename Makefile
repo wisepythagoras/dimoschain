@@ -3,6 +3,7 @@ SRC := $(HOME)/go/src/github.com/wisepythagoras/
 all:
 	make -C cmd/dimos-bg-service
 	make -C cmd/create-genesis
+	make -C cmd/get-block
 
 tests:
 	make -C cmd/test-block

@@ -33,7 +33,7 @@ func main() {
 		To:        []byte("0"),
 		Signature: []byte("0"),
 	}
-	tx.CalculateHash()
+	tx.Hash, err = tx.CalculateHash()
 
 	// Create the genesis block.
 	genesisBlock := dimos.Block{
@@ -63,7 +63,9 @@ func main() {
 	_ = utils.WriteGenesisHash(hash)
 
 	// Add the block.
-	blockchain.AddBlock(&genesisBlock)
-
-	log.Println("Created genesis")
+	if _, err = blockchain.AddBlock(&genesisBlock); err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Created genesis")
+	}
 }

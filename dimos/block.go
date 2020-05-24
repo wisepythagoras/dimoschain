@@ -2,7 +2,10 @@ package dimos
 
 import (
 	"bytes"
+	"encoding/hex"
 	"errors"
+	"fmt"
+	"time"
 
 	"github.com/cbergoon/merkletree"
 	"github.com/vmihailenco/msgpack"
@@ -68,12 +71,13 @@ func (b *Block) GetInterface(includeTx bool) interface{} {
 		}
 
 		returnable = BlockRep{
-			IDx:        b.IDx,
-			MerkleRoot: b.MerkleRoot,
-			Timestamp:  b.Timestamp,
-			Hash:       b.Hash,
-			PrevHash:   b.PrevHash,
-			Signature:  b.Signature,
+			IDx:          b.IDx,
+			MerkleRoot:   b.MerkleRoot,
+			Timestamp:    b.Timestamp,
+			Hash:         b.Hash,
+			PrevHash:     b.PrevHash,
+			Signature:    b.Signature,
+			Transactions: b.Transactions,
 		}
 	} else {
 		type BlockRep struct {
@@ -165,6 +169,22 @@ func (b *Block) VerifyMerkleTreeTx(tx *Transaction) bool {
 	}
 
 	return vc
+}
+
+// String returns the string representation of the transaction.
+func (b Block) String() string {
+	resp := "IDx: " + fmt.Sprintf("%d", b.IDx) + "\n" +
+		"Timestamp: " + time.Unix(b.Timestamp, 0).String() + "\n" +
+		"Merkle root: " + hex.EncodeToString(b.MerkleRoot) + "\n" +
+		"Block Hash: " + hex.EncodeToString(b.Hash) + "\n" +
+		"Prev Hash: " + hex.EncodeToString(b.PrevHash) + "\n" +
+		"Signature: " + hex.EncodeToString(b.Signature)
+	fmt.Println(b.Transactions)
+	for _, tx := range b.Transactions {
+		resp = resp + "\n---------\n" + tx.String()
+	}
+
+	return resp
 }
 
 // BlockFromBytes converts a block directly from the fs into an unserialized Block object.
