@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// Load the database.
-	blockchain, err := dimos.LoadChainDB()
+	blockchain, err := dimos.InitChainDB()
 
 	if err != nil {
 		log.Fatal(err)

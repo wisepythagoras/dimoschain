@@ -108,3 +108,4 @@ blockchain/*
 dimosthenes
 bin/test-*
 bin/dimos-*
+bin/create-*

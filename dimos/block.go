@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/cbergoon/merkletree"
+	"github.com/vmihailenco/msgpack"
 	"github.com/wisepythagoras/dimoschain/crypto"
 )
 
@@ -49,6 +50,78 @@ func (b *Block) UpdateHash() error {
 	b.Hash = hash
 
 	return nil
+}
+
+// GetInterface returns the interface.
+func (b *Block) GetInterface(includeTx bool) interface{} {
+	var returnable interface{}
+
+	if includeTx {
+		type BlockRep struct {
+			IDx          int64
+			MerkleRoot   []byte
+			Timestamp    int64
+			Transactions []Transaction
+			Hash         []byte
+			PrevHash     []byte
+			Signature    []byte
+		}
+
+		returnable = BlockRep{
+			IDx:        b.IDx,
+			MerkleRoot: b.MerkleRoot,
+			Timestamp:  b.Timestamp,
+			Hash:       b.Hash,
+			PrevHash:   b.PrevHash,
+			Signature:  b.Signature,
+		}
+	} else {
+		type BlockRep struct {
+			IDx        int64
+			MerkleRoot []byte
+			Timestamp  int64
+			Hash       []byte
+			PrevHash   []byte
+			Signature  []byte
+		}
+
+		returnable = BlockRep{
+			IDx:        b.IDx,
+			MerkleRoot: b.MerkleRoot,
+			Timestamp:  b.Timestamp,
+			Hash:       b.Hash,
+			PrevHash:   b.PrevHash,
+			Signature:  b.Signature,
+		}
+	}
+
+	return returnable
+}
+
+// GetSerialized returns the msgpack version of this block.
+func (b *Block) GetSerialized(includeTx bool) ([]byte, error) {
+	return msgpack.Marshal(b.GetInterface(includeTx))
+}
+
+// ComputeHash computes the hash of the block.
+func (b *Block) ComputeHash() ([]byte, error) {
+	// Get the msgpack version of the block.
+	bin, err := b.GetSerialized(false)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Get the hash.
+	hash, err := crypto.GetSHA3512Hash(bin)
+
+	if err != nil {
+		return nil, err
+	}
+
+	b.Hash = hash
+
+	return hash, nil
 }
 
 // ComputeMerkleRoot computes the merkle root based on

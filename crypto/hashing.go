@@ -2,10 +2,12 @@ package crypto
 
 import (
 	"encoding/hex"
+
 	"github.com/btcsuite/btcutil/base58"
 	"golang.org/x/crypto/sha3"
 
 	"crypto/sha256"
+
 	"golang.org/x/crypto/ripemd160"
 )
 
@@ -16,7 +18,7 @@ func Base58Encode(payload []byte) string {
 
 // Base58Decode decodes a base58 encoded string.
 func Base58Decode(str string) []byte {
-        return base58.Decode(str)
+	return base58.Decode(str)
 }
 
 // GetSHA3512Hash returns the SHA3-512 hash of a given string.
