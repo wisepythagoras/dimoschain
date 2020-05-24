@@ -3,16 +3,52 @@ package dimos
 import (
 	"bytes"
 	"errors"
+
 	"github.com/cbergoon/merkletree"
+	"github.com/wisepythagoras/dimoschain/crypto"
 )
 
 // Block represents each individual block in the chain.
 type Block struct {
-	MerkleRoot []byte `json: "m"`
-	merkleTree *merkletree.MerkleTree
-	Transactions []Transaction `json: "txs"`
-	Hash []byte `json: "h"`
-	Signature []byte `json: "s"`
+	IDx          int64         `json:"i"`
+	MerkleRoot   []byte        `json:"m"`
+	Timestamp    int64         `json:"ts"`
+	Transactions []Transaction `json:"txs"`
+	Hash         []byte        `json:"h"`
+	PrevHash     []byte        `json:"ph"`
+	Signature    []byte        `json:"s"`
+	merkleTree   *merkletree.MerkleTree
+}
+
+// AddTransaction adds a transaction to the blockchain.
+func (b *Block) AddTransaction(tx *Transaction) bool {
+	if tx == nil {
+		return false
+	}
+
+	// Add the transaction.
+	b.Transactions = append(b.Transactions, *tx)
+
+	// Update the Merkle root and the hash.
+	b.UpdateHash()
+
+	return true
+}
+
+// UpdateHash updates the block's hash
+func (b *Block) UpdateHash() error {
+	b.ComputeMerkleRoot()
+
+	// Compute the block's hash.
+	hash, err := crypto.GetSHA3512Hash(nil)
+
+	if err != nil {
+		return err
+	}
+
+	b.Hash = hash
+
+	return nil
 }
 
 // ComputeMerkleRoot computes the merkle root based on

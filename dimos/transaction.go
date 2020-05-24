@@ -3,19 +3,20 @@ package dimos
 import (
 	"bytes"
 	"encoding/json"
+
+	"github.com/cbergoon/merkletree"
 	"github.com/wisepythagoras/dimoschain/crypto"
 	"github.com/wisepythagoras/dimoschain/utils"
-	"github.com/cbergoon/merkletree"
 )
 
 // Transaction represents a single transaction from and to another wallet in the
 // dimosthenes network.
 type Transaction struct {
-	Hash []byte `json: "h"`
-	Amount float64 `json: "a"`
-	From []byte `json: "f"`
-	To []byte `json: "t"`
-	Signature []byte `json: "s"`
+	Hash      []byte  `json:"h"`
+	Amount    float64 `json:"a"`
+	From      []byte  `json:"f"`
+	To        []byte  `json:"t"`
+	Signature []byte  `json:"s"`
 }
 
 // CalculateHash calculates the hash of this transaction.

@@ -13,7 +13,7 @@ func GetChainDir(createIfNotExists bool) (string, error) {
 		return "", err
 	}
 
-	path := home + ".dimos"
+	path := home + "/.dimos"
 
 	if createIfNotExists {
 		// Create the directory if it doesn't exist.
