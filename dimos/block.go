@@ -179,7 +179,7 @@ func (b Block) String() string {
 		"Block Hash: " + hex.EncodeToString(b.Hash) + "\n" +
 		"Prev Hash: " + hex.EncodeToString(b.PrevHash) + "\n" +
 		"Signature: " + hex.EncodeToString(b.Signature)
-	fmt.Println(b.Transactions)
+
 	for _, tx := range b.Transactions {
 		resp = resp + "\n---------\n" + tx.String()
 	}
