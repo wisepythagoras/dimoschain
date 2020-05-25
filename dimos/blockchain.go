@@ -1,7 +1,10 @@
 package dimos
 
 import (
+	"bytes"
+	"encoding/hex"
 	"errors"
+	"fmt"
 
 	badger "github.com/dgraph-io/badger"
 	"github.com/wisepythagoras/dimoschain/utils"
@@ -24,6 +27,48 @@ func (b *Blockchain) GetDB() []byte {
 // GetCurrentBlock gets the current block.
 func (b *Blockchain) GetCurrentBlock() (*Block, error) {
 	return b.GetBlock(b.CurrentHash)
+}
+
+// IsChainValid checks if the blockchain is consistent and that all blocks are
+// valid. Every block in the chain needs to have the correct index (IDx), hash
+// and previous hash.
+func (b *Blockchain) IsChainValid() (bool, error) {
+	// First check if the blockchain has been instanciated.
+	if b.db == nil {
+		return false, errors.New("No instance of the blockchain")
+	}
+
+	// Then, the next step would be to get the current block. From there on we
+	// will go on to the previous blocks until we reach the genesis block.
+	block, err := b.GetCurrentBlock()
+
+	if err != nil {
+		return false, err
+	}
+
+	// We'll use this as our next block reference.
+	nextBlock := block
+
+	// Now we loop. This is probably not efficient, and it will be rewritten in the
+	// future, but for now it stays put.
+	for block, err = b.GetBlock(block.PrevHash); err == nil && block != nil &&
+		bytes.Compare(block.PrevHash, []byte("0")) == 0; {
+		// Here, technically we will, at some point, reach the genesis block. This
+		// means that the loop will exit when the genesis block or an error is reached.
+
+		// Just validate the block.
+		if _, err = b.ValidateBlock(nextBlock, block); err != nil {
+			return false, err
+		}
+
+		nextBlock = block
+	}
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 // GetBlock get's a block by its hash.
@@ -51,6 +96,50 @@ func (b *Blockchain) GetBlock(hash []byte) (*Block, error) {
 
 	// Parse the block.
 	return BlockFromBytes(value)
+}
+
+// ValidateBlock validates that a block conforms with the rules of our blockchain. Which means
+// that the prevHash of our new block needs to match the hash of the prevBlock. Also, the hash
+// of the block, as well as the merkle root, need to check out.
+func (b *Blockchain) ValidateBlock(block *Block, prevBlock *Block) (bool, error) {
+	// First compare the blocks.
+	if bytes.Compare(block.PrevHash, prevBlock.Hash) != 0 {
+		return false, errors.New("The prevHash doesn't match the hash of given prevBlock")
+	}
+
+	// The IDx of our block needs to be an increment of 1 above the previous block.
+	if prevBlock.IDx != block.IDx-1 {
+		str := fmt.Sprintf("Invalid IDx found at block %s", hex.EncodeToString(block.Hash))
+		return false, errors.New(str)
+	}
+
+	// Check the signature here.
+
+	// Now verify the merkle root.
+	merkleRoot, err := block.ComputeMerkleRoot()
+
+	if err != nil || bytes.Compare(merkleRoot, block.MerkleRoot) == 0 {
+		if err == nil {
+			str := fmt.Sprintf("Invalid merkle root at block %s", hex.EncodeToString(block.Hash))
+			err = errors.New(str)
+		}
+
+		return false, err
+	}
+
+	// Lastly we check the hash of the block.
+	hash, err := block.ComputeHash()
+
+	if err != nil || bytes.Compare(hash, block.Hash) == 0 {
+		if err == nil {
+			str := fmt.Sprintf("Invalid block hash at %s", hex.EncodeToString(block.Hash))
+			err = errors.New(str)
+		}
+
+		return false, err
+	}
+
+	return true, nil
 }
 
 // CreateBlock adds a block to the chain.
