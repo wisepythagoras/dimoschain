@@ -49,4 +49,3 @@ Usage of ./bin/dimos-get-block:
 #### Warning
 
 This software is far from complete and improved every day.
-

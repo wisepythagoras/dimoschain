@@ -1,8 +1,9 @@
 package crypto
 
 import (
-	"errors"
 	"encoding/hex"
+	"errors"
+
 	"github.com/decred/dcrd/dcrec/secp256k1"
 	"github.com/decred/dcrd/dcrec/secp256k1/ecdsa"
 )
@@ -13,7 +14,7 @@ import (
 
 // KeyPair represents a structure for managing encryption keys.
 type KeyPair struct {
-	Public *secp256k1.PublicKey
+	Public  *secp256k1.PublicKey
 	Private *secp256k1.PrivateKey
 }
 

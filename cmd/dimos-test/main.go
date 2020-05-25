@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"encoding/hex"
-	"github.com/wisepythagoras/dimoschain/dimos"
+	"fmt"
+
 	"github.com/wisepythagoras/dimoschain/crypto"
+	"github.com/wisepythagoras/dimoschain/dimos"
 )
 
 func main() {
@@ -44,4 +45,12 @@ func main() {
 	tx := dimos.Transaction{}
 
 	fmt.Println(tx)
+
+	prbg := crypto.PRBG{
+		Seed: []byte("Test seed"),
+	}
+
+	fmt.Println(hex.EncodeToString(prbg.Next(10)))
+	fmt.Println(hex.EncodeToString(prbg.Next(10)))
+	fmt.Println(prbg.NextInt64(10))
 }
