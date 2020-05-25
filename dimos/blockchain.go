@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"log"
 
 	badger "github.com/dgraph-io/badger"
 	"github.com/wisepythagoras/dimoschain/utils"
@@ -32,7 +33,7 @@ func (b *Blockchain) GetCurrentBlock() (*Block, error) {
 // IsChainValid checks if the blockchain is consistent and that all blocks are
 // valid. Every block in the chain needs to have the correct index (IDx), hash
 // and previous hash.
-func (b *Blockchain) IsChainValid() (bool, error) {
+func (b *Blockchain) IsChainValid(verbose bool) (bool, error) {
 	// First check if the blockchain has been instanciated.
 	if b.db == nil {
 		return false, errors.New("No instance of the blockchain")
@@ -58,7 +59,15 @@ func (b *Blockchain) IsChainValid() (bool, error) {
 
 		// Just validate the block.
 		if _, err = b.ValidateBlock(nextBlock, block); err != nil {
+			if verbose {
+				log.Printf("[ERR] %s", hex.EncodeToString(block.Hash))
+			}
+
 			return false, err
+		}
+
+		if verbose {
+			log.Printf("[OK] %s", hex.EncodeToString(block.Hash))
 		}
 
 		nextBlock = block
@@ -165,7 +174,7 @@ func (b *Blockchain) AddBlock(block *Block) (bool, error) {
 		}
 
 		// Validate our - new-to-be - block.
-		if _, err = b.ValidateBlock(block, currentBlock) {
+		if _, err = b.ValidateBlock(block, currentBlock); err != nil {
 			return false, err
 		}
 	}
