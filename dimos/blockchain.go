@@ -157,15 +157,17 @@ func (b *Blockchain) AddBlock(block *Block) (bool, error) {
 	}
 
 	if !isGenesisBlock {
+		// Get the current block.
 		currentBlock, err := b.GetCurrentBlock()
 
 		if err != nil {
 			return false, err
 		}
 
-		block.IDx = currentBlock.IDx + 1
-		block.PrevHash = currentBlock.Hash
-		block.ComputeHash()
+		// Validate our - new-to-be - block.
+		if _, err = b.ValidateBlock(block, currentBlock) {
+			return false, err
+		}
 	}
 
 	// Create a new transaction.
