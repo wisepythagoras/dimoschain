@@ -50,10 +50,11 @@ func (b *Blockchain) IsChainValid(verbose bool) (bool, error) {
 	// We'll use this as our next block reference.
 	nextBlock := block
 
+	block, err = b.GetBlock(block.PrevHash)
+
 	// Now we loop. This is probably not efficient, and it will be rewritten in the
 	// future, but for now it stays put.
-	for block, err = b.GetBlock(block.PrevHash); err == nil && block != nil &&
-		bytes.Compare(block.PrevHash, []byte("0")) == 0; {
+	for err == nil && block != nil {
 		// Here, technically we will, at some point, reach the genesis block. This
 		// means that the loop will exit when the genesis block or an error is reached.
 
@@ -70,7 +71,12 @@ func (b *Blockchain) IsChainValid(verbose bool) (bool, error) {
 			log.Printf("[OK] %s", hex.EncodeToString(block.Hash))
 		}
 
-		nextBlock = block
+		if bytes.Compare(block.PrevHash, []byte("0")) == 0 {
+			break
+		} else {
+			nextBlock = block
+			block, err = b.GetBlock(block.PrevHash)
+		}
 	}
 
 	if err != nil {
@@ -127,7 +133,7 @@ func (b *Blockchain) ValidateBlock(block *Block, prevBlock *Block) (bool, error)
 	// Now verify the merkle root.
 	merkleRoot, err := block.ComputeMerkleRoot()
 
-	if err != nil || bytes.Compare(merkleRoot, block.MerkleRoot) == 0 {
+	if err != nil || bytes.Compare(merkleRoot, block.MerkleRoot) != 0 {
 		if err == nil {
 			str := fmt.Sprintf("Invalid merkle root at block %s", hex.EncodeToString(block.Hash))
 			err = errors.New(str)
@@ -139,7 +145,7 @@ func (b *Blockchain) ValidateBlock(block *Block, prevBlock *Block) (bool, error)
 	// Lastly we check the hash of the block.
 	hash, err := block.ComputeHash()
 
-	if err != nil || bytes.Compare(hash, block.Hash) == 0 {
+	if err != nil || bytes.Compare(hash, block.Hash) != 0 {
 		if err == nil {
 			str := fmt.Sprintf("Invalid block hash at %s", hex.EncodeToString(block.Hash))
 			err = errors.New(str)

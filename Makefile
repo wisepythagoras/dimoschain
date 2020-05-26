@@ -4,6 +4,7 @@ all:
 	make -C cmd/dimos-bg-service
 	make -C cmd/create-genesis
 	make -C cmd/get-block
+	make -C cmd/check-validity
 
 tests:
 	make -C cmd/test-block
