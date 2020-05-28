@@ -53,12 +53,12 @@ func main() {
 
 	// The merkle root is updated every time we append a new transaction, but we get
 	// it here, so that we can catch any error.
-	_, err = genesisBlock.ComputeMerkleRoot()
+	_, err = genesisBlock.ComputeMerkleRoot(false)
 
 	log.Println("Merkle Root:", hex.EncodeToString(genesisBlock.MerkleRoot), err)
 
 	// Compute the hash of the block.
-	hash, err := genesisBlock.ComputeHash()
+	hash, err := genesisBlock.ComputeHash(false)
 
 	log.Println("Genesis Hash:", hex.EncodeToString(hash), err)
 

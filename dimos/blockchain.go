@@ -54,27 +54,33 @@ func (b *Blockchain) IsChainValid(verbose bool) (bool, error) {
 
 	// Now we loop. This is probably not efficient, and it will be rewritten in the
 	// future, but for now it stays put.
-	for err == nil && block != nil {
+	for err == nil && nextBlock != nil {
 		// Here, technically we will, at some point, reach the genesis block. This
 		// means that the loop will exit when the genesis block or an error is reached.
 
 		// Just validate the block.
 		if _, err = b.ValidateBlock(nextBlock, block); err != nil {
 			if verbose {
-				log.Printf("[ERR] %s", hex.EncodeToString(block.Hash))
+				log.Printf("[ERR] %s\n", hex.EncodeToString(nextBlock.Hash))
 			}
 
 			return false, err
 		}
 
 		if verbose {
-			log.Printf("[OK] %s", hex.EncodeToString(block.Hash))
+			log.Printf("[OK] %s\n", hex.EncodeToString(nextBlock.Hash))
 		}
 
-		if bytes.Compare(block.PrevHash, []byte("0")) == 0 {
+		if block == nil {
+			log.Println("[OK] Reached the genesis block")
 			break
+		}
+
+		nextBlock = block
+
+		if bytes.Compare(block.PrevHash, []byte("0")) == 0 {
+			block = nil
 		} else {
-			nextBlock = block
 			block, err = b.GetBlock(block.PrevHash)
 		}
 	}
@@ -117,6 +123,28 @@ func (b *Blockchain) GetBlock(hash []byte) (*Block, error) {
 // that the prevHash of our new block needs to match the hash of the prevBlock. Also, the hash
 // of the block, as well as the merkle root, need to check out.
 func (b *Blockchain) ValidateBlock(block *Block, prevBlock *Block) (bool, error) {
+	if prevBlock == nil {
+		// In this case, we may have the genesis block.
+		if bytes.Compare(block.PrevHash, []byte("0")) != 0 {
+			return false, errors.New("No previous block")
+		}
+
+		// Check if this is the genesis hash.
+		genesisHash, err := utils.GetGenesisHash()
+
+		if err != nil {
+			return false, err
+		}
+
+		// Compare the genesis hash on file with the one from the block.
+		if bytes.Compare(block.Hash, genesisHash) != 0 {
+			return false, errors.New("Invalid genesis block")
+		}
+
+		// Make sure to return here, otherwise bad things will happen.
+		return true, nil
+	}
+
 	// First compare the blocks.
 	if bytes.Compare(block.PrevHash, prevBlock.Hash) != 0 {
 		return false, errors.New("The prevHash doesn't match the hash of given prevBlock")
@@ -131,7 +159,7 @@ func (b *Blockchain) ValidateBlock(block *Block, prevBlock *Block) (bool, error)
 	// Check the signature here.
 
 	// Now verify the merkle root.
-	merkleRoot, err := block.ComputeMerkleRoot()
+	merkleRoot, err := block.ComputeMerkleRoot(true)
 
 	if err != nil || bytes.Compare(merkleRoot, block.MerkleRoot) != 0 {
 		if err == nil {
@@ -143,7 +171,7 @@ func (b *Blockchain) ValidateBlock(block *Block, prevBlock *Block) (bool, error)
 	}
 
 	// Lastly we check the hash of the block.
-	hash, err := block.ComputeHash()
+	hash, err := block.ComputeHash(true)
 
 	if err != nil || bytes.Compare(hash, block.Hash) != 0 {
 		if err == nil {
@@ -190,7 +218,7 @@ func (b *Blockchain) AddBlock(block *Block) (bool, error) {
 	defer txn.Discard()
 
 	// Get the serialized block.
-	serialized, err := block.GetSerialized(true)
+	serialized, err := block.GetSerialized(true, false)
 
 	if err != nil {
 		return false, err

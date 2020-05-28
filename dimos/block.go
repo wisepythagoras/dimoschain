@@ -41,10 +41,10 @@ func (b *Block) AddTransaction(tx *Transaction) bool {
 
 // UpdateHash updates the block's hash
 func (b *Block) UpdateHash() error {
-	b.ComputeMerkleRoot()
+	b.ComputeMerkleRoot(false)
 
 	// Compute the block's hash.
-	hash, err := crypto.GetSHA3512Hash(nil)
+	hash, err := b.ComputeHash(true)
 
 	if err != nil {
 		return err
@@ -56,8 +56,15 @@ func (b *Block) UpdateHash() error {
 }
 
 // GetInterface returns the interface.
-func (b *Block) GetInterface(includeTx bool) interface{} {
+func (b *Block) GetInterface(includeTx bool, omitHash bool) interface{} {
 	var returnable interface{}
+	var hash []byte
+
+	if omitHash {
+		hash = nil
+	} else {
+		hash = b.Hash
+	}
 
 	if includeTx {
 		type BlockRep struct {
@@ -74,7 +81,7 @@ func (b *Block) GetInterface(includeTx bool) interface{} {
 			IDx:          b.IDx,
 			MerkleRoot:   b.MerkleRoot,
 			Timestamp:    b.Timestamp,
-			Hash:         b.Hash,
+			Hash:         hash,
 			PrevHash:     b.PrevHash,
 			Signature:    b.Signature,
 			Transactions: b.Transactions,
@@ -93,7 +100,7 @@ func (b *Block) GetInterface(includeTx bool) interface{} {
 			IDx:        b.IDx,
 			MerkleRoot: b.MerkleRoot,
 			Timestamp:  b.Timestamp,
-			Hash:       b.Hash,
+			Hash:       hash,
 			PrevHash:   b.PrevHash,
 			Signature:  b.Signature,
 		}
@@ -103,14 +110,14 @@ func (b *Block) GetInterface(includeTx bool) interface{} {
 }
 
 // GetSerialized returns the msgpack version of this block.
-func (b *Block) GetSerialized(includeTx bool) ([]byte, error) {
-	return msgpack.Marshal(b.GetInterface(includeTx))
+func (b *Block) GetSerialized(includeTx bool, omitHash bool) ([]byte, error) {
+	return msgpack.Marshal(b.GetInterface(includeTx, omitHash))
 }
 
 // ComputeHash computes the hash of the block.
-func (b *Block) ComputeHash() ([]byte, error) {
+func (b *Block) ComputeHash(computeOnly bool) ([]byte, error) {
 	// Get the msgpack version of the block.
-	bin, err := b.GetSerialized(false)
+	bin, err := b.GetSerialized(false, true)
 
 	if err != nil {
 		return nil, err
@@ -123,13 +130,15 @@ func (b *Block) ComputeHash() ([]byte, error) {
 		return nil, err
 	}
 
-	b.Hash = hash
+	if !computeOnly {
+		b.Hash = hash
+	}
 
 	return hash, nil
 }
 
 // ComputeMerkleRoot computes the merkle root based on
-func (b *Block) ComputeMerkleRoot() ([]byte, error) {
+func (b *Block) ComputeMerkleRoot(computeOnly bool) ([]byte, error) {
 	var list []merkletree.Content
 
 	// Append the transactions to the list of leaves.
@@ -144,7 +153,10 @@ func (b *Block) ComputeMerkleRoot() ([]byte, error) {
 		return nil, err
 	}
 
-	b.merkleTree = tree
+	if !computeOnly {
+		b.merkleTree = tree
+	}
+
 	root := tree.MerkleRoot()
 
 	// If there is a merkle root present on the instance and it doesn't match with
@@ -154,7 +166,9 @@ func (b *Block) ComputeMerkleRoot() ([]byte, error) {
 		return nil, errors.New("Invalid root computed")
 	}
 
-	b.MerkleRoot = root
+	if !computeOnly {
+		b.MerkleRoot = root
+	}
 
 	return b.MerkleRoot, nil
 }
