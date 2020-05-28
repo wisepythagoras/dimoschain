@@ -109,3 +109,4 @@ dimosthenes
 bin/test-*
 bin/dimos-*
 bin/create-*
+bin/wallet

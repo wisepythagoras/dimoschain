@@ -7,8 +7,6 @@ import (
 	"golang.org/x/crypto/sha3"
 
 	"crypto/sha256"
-
-	"golang.org/x/crypto/ripemd160"
 )
 
 // Base58Encde encodes a series of bytes into a base58 string.
@@ -47,20 +45,15 @@ func ByteArrayToHex(payload []byte) string {
 	return hex.EncodeToString(payload)
 }
 
-// Ripemd160SHA256 generates a Ripemd160 hash which is used for wallet addresses.
-func Ripemd160SHA256(b []byte) []byte {
-	shaSum := GetSHA256Hash(b)
-
-	hash := ripemd160.New()
-	hash.Write(shaSum)
-
-	return hash.Sum(nil)
+// DoubleSHA256 generates the double SHA256 hash of the input.
+func DoubleSHA256(b []byte) []byte {
+	return GetSHA256Hash(GetSHA256Hash(b))
 }
 
 // GenArr generates an address the same way it's generated for Bitcoin.
-func GenAddr(pubkey []byte) string {
-	ripe := Ripemd160SHA256(pubkey)
-	a := append([]byte{0}, ripe...)
+func AddrFromPubKey(pubkey []byte) string {
+	shaSum, _ := GetSHA3512Hash(pubkey)
+	a := append([]byte{0}, shaSum...)
 
-	return Base58Encode(append(a, GetSHA256Hash(GetSHA256Hash(a))[:4]...))
+	return Base58Encode(append(a[:30], DoubleSHA256(a)[:5]...))
 }

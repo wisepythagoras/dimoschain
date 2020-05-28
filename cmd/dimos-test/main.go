@@ -40,7 +40,7 @@ func main() {
 	res := crypto.VerifySignature(keyPair.Public, der, []byte("Hello, world!"))
 	fmt.Println("Verified:", res)
 
-	fmt.Println(crypto.GenAddr(keyPair.Public.SerializeCompressed()))
+	fmt.Println(crypto.AddrFromPubKey(keyPair.Public.SerializeCompressed()))
 
 	tx := dimos.Transaction{}
 
