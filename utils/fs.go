@@ -36,6 +36,7 @@ func GetChainDir(createIfNotExists bool) (string, error) {
 	return path, nil
 }
 
+// ReadFileInChainDir Read a file in the blockchain directory.
 func ReadFileInChainDir(fileName string) ([]byte, error) {
 	// Get the chain's directory.
 	home, err := GetChainDir(true)

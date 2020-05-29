@@ -4,8 +4,10 @@ import (
 	"flag"
 	"log"
 
+	"github.com/vmihailenco/msgpack"
 	"github.com/wisepythagoras/dimoschain/crypto"
-	_ "github.com/wisepythagoras/dimoschain/utils"
+	"github.com/wisepythagoras/dimoschain/dimos"
+	"github.com/wisepythagoras/dimoschain/utils"
 )
 
 func main() {
@@ -13,6 +15,7 @@ func main() {
 	privKey := flag.String("import", "", "Import a private key")
 	open := flag.String("open", "", "Open a wallet file")
 	create := flag.Bool("create", false, "Create a new wallet")
+	name := flag.String("name", "", "The filename")
 
 	flag.Parse()
 
@@ -39,6 +42,23 @@ func main() {
 		log.Println("New Address:", addr)
 		log.Println("Public Key: ", keyPair.GetPubKey())
 		log.Println("Private Key:", keyPair.GetPrivKey())
+
+		if len(*name) > 0 {
+			// Create a new keypair object.
+			wallet := dimos.Wallet{
+				KeyPair: keyPair,
+			}
+
+			// Marshall to msgpack.
+			bin, _ := msgpack.Marshal(wallet.Serialize())
+
+			// Write the file to the disk.
+			err = utils.WriteToFile(*name+".wallet", bin)
+		}
+
+		if err != nil {
+			log.Fatalln(err)
+		}
 	} else {
 		log.Println("Under construction")
 	}
