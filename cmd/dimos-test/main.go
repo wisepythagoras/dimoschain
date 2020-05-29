@@ -53,4 +53,17 @@ func main() {
 	fmt.Println(hex.EncodeToString(prbg.Next(10)))
 	fmt.Println(hex.EncodeToString(prbg.Next(10)))
 	fmt.Println(prbg.NextInt64(10))
+
+	fmt.Println("----")
+
+	plaintext := []byte("This is an example plaintext")
+	key := []byte("This is a test key")
+
+	ciphertext, err := crypto.EncryptCTR(plaintext, crypto.PadKey(key))
+
+	fmt.Println("Ciphertext:", hex.EncodeToString(ciphertext), err)
+
+	decrypted, err := crypto.DecryptCTR(ciphertext, crypto.PadKey(key))
+
+	fmt.Println("Decrypted:", string(decrypted), err)
 }
