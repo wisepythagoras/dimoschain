@@ -4,6 +4,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"errors"
 	"io"
 )
 
@@ -25,58 +26,60 @@ func PadKey(key []byte) []byte {
 	return append(key, prbg.Next(32-len(key))...)
 }
 
-// EncryptCTR encrypts the plaintext with AES/CTR.
-func EncryptCTR(plaintext []byte, key []byte) ([]byte, error) {
+// EncryptGCM encrypts the plaintext with AES/GCM.
+func EncryptGCM(plaintext []byte, key []byte) ([]byte, error) {
 	// Create a new cipher.
-	block, err := aes.NewCipher(key)
+	c, err := aes.NewCipher(key)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// Now we make the ciphertext.
-	ciphertext := make([]byte, aes.BlockSize+len(plaintext))
+	// Use GCM - Galois/Counter Mode.
+	gcm, err := cipher.NewGCM(c)
 
-	// The IV needs to be unique and random, but, according to the docs, it doesn't need
-	// to be secure.
-	iv := ciphertext[:aes.BlockSize]
-
-	// So let's get some random values from the reader.
-	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+	if err != nil {
 		return nil, err
 	}
 
-	// Now let's encrypt.
-	stream := cipher.NewCTR(block, IV)
-	stream.XORKeyStream(ciphertext[aes.BlockSize:], plaintext)
+	// GCM requires that we have a cryptographically secure nonce which will be passed
+	// to our Seal function.
+	nonce := make([]byte, gcm.NonceSize())
 
-	// Should an HMAC be used here?
+	// Get the nonce.
+	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
+		return nil, err
+	}
 
-	// Return the ciphertext.
-	return ciphertext, nil
+	// Now seal the deal.
+	return gcm.Seal(nonce, nonce, plaintext, nil), nil
 }
 
-// DecryptCTR decrypts an AES/CTR encrypted ciphertext.
-func DecryptCTR(ciphertext []byte, key []byte) ([]byte, error) {
+// DecryptGCM decrypts an AES/GCM encrypted ciphertext.
+func DecryptGCM(ciphertext []byte, key []byte) ([]byte, error) {
 	// Create a new cipher.
-	block, err := aes.NewCipher(key)
+	c, err := aes.NewCipher(key)
 
 	if err != nil {
 		return nil, err
 	}
 
-	iv := ciphertext[:aes.BlockSize]
+	// Use GCM - Galois/Counter Mode.
+	gcm, err := cipher.NewGCM(c)
 
-	// So let's get some random values from the reader.
-	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+	if err != nil {
 		return nil, err
 	}
 
-	plaintext := make([]byte, aes.BlockSize+len(ciphertext))
+	nonceSize := gcm.NonceSize()
 
-	// Now let's decrypt.
-	stream := cipher.NewCTR(block, IV)
-	stream.XORKeyStream(plaintext, ciphertext[aes.BlockSize:])
+	if len(ciphertext) < nonceSize {
+		return nil, errors.New("The size of the nonce is greater than the length of the ciphertext")
+	}
 
-	return plaintext, nil
+	// Separate the nonce from the ciphertext.
+	nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
+
+	// Now decrypt the ciphertext.
+	return gcm.Open(nil, nonce, ciphertext, nil)
 }

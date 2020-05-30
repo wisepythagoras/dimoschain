@@ -59,11 +59,11 @@ func main() {
 	plaintext := []byte("This is an example plaintext")
 	key := []byte("This is a test key")
 
-	ciphertext, err := crypto.EncryptCTR(plaintext, crypto.PadKey(key))
+	ciphertext, err := crypto.EncryptGCM(plaintext, crypto.PadKey(key))
 
 	fmt.Println("Ciphertext:", hex.EncodeToString(ciphertext), err)
 
-	decrypted, err := crypto.DecryptCTR(ciphertext, crypto.PadKey(key))
+	decrypted, err := crypto.DecryptGCM(ciphertext, crypto.PadKey(key))
 
 	fmt.Println("Decrypted:", string(decrypted), err)
 }
