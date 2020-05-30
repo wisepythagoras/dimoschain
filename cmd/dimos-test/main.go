@@ -26,7 +26,7 @@ func main() {
 	addr := keyPair.GetAddr()
 
 	fmt.Println("Address:", addr)
-	keyPair.GetPubKeyFromAddr(addr)
+	keyPair.GetPubKeyHashFromAddr(addr)
 
 	sig, err := keyPair.Sign([]byte("Hello, world!"))
 

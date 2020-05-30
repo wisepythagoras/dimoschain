@@ -7,17 +7,27 @@ import (
 
 // Wallet defines the wallet structure.
 type Wallet struct {
-	KeyPair crypto.KeyPair
+	KeyPair *crypto.KeyPair
 }
 
 // Serialize serializes the wallet
 func (w *Wallet) Serialize() []byte {
-	wallet := make(map[string]interface{})
-	wallet["pub"] = w.KeyPair.Public.SerializeCompressed()
-	wallet["priv"] = w.KeyPair.Private.Serialize()
+	return w.KeyPair.Private.Serialize()
+}
 
-	// Serialize the object into msgpack format.
-	serialized, _ := msgpack.Marshal(wallet)
+// Unserialize imports a wallet file.
+func (w *Wallet) Unserialize(bin []byte) error {
+	privKeyBytes := make([]byte, len(bin))
 
-	return serialized
+	// Unmarshal the binary into a private key.
+	err := msgpack.Unmarshal(bin, &privKeyBytes)
+
+	if err != nil {
+		return err
+	}
+
+	// Parse the private key from bytes.
+	w.KeyPair = crypto.PrivKeyFromBytes(privKeyBytes)
+
+	return nil
 }

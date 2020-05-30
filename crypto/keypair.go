@@ -65,15 +65,16 @@ func (k *KeyPair) GetAddr() string {
 	return AddrFromPubKey(public)
 }
 
-func (k *KeyPair) GetPubKeyFromAddr(str string) error {
+// GetPubKeyHashFromAddr gets the public key hash from the address.
+func (k *KeyPair) GetPubKeyHashFromAddr(str string) ([]byte, error) {
 	// Decode the base58 encoded string.
 	decoded := Base58Decode(str)
 
-	if len(decoded) == 0 || len(decoded) < 34 {
-		return errors.New("Invalid input string")
+	if len(decoded) == 0 || len(decoded) < 38 {
+		return nil, errors.New("Invalid address")
 	}
 
-	return nil
+	return decoded[1:33], nil
 }
 
 // GetPubKeyUncompressed gets the uncompressed version of the public key.

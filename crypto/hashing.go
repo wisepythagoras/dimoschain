@@ -9,7 +9,7 @@ import (
 	"crypto/sha256"
 )
 
-// Base58Encde encodes a series of bytes into a base58 string.
+// Base58Encode encodes a series of bytes into a base58 string.
 func Base58Encode(payload []byte) string {
 	return base58.Encode(payload)
 }
@@ -50,10 +50,9 @@ func DoubleSHA256(b []byte) []byte {
 	return GetSHA256Hash(GetSHA256Hash(b))
 }
 
-// GenArr generates an address the same way it's generated for Bitcoin.
+// AddrFromPubKey generates an address the same way it's generated for Bitcoin.
 func AddrFromPubKey(pubkey []byte) string {
-	shaSum, _ := GetSHA3512Hash(pubkey)
-	a := append([]byte{0}, shaSum...)
+	a := append([]byte{0}, GetSHA256Hash(pubkey)...)
 
-	return Base58Encode(append(a[:30], DoubleSHA256(a)[:5]...))
+	return Base58Encode(append(a, DoubleSHA256(a)[:5]...))
 }
