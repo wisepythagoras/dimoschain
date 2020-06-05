@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	log.Println(utils.NAME, utils.VERSION)
+	log.Println(utils.Name, utils.Version)
 
 	// Load the database.
 	blockchain, err := dimos.InitChainDB()

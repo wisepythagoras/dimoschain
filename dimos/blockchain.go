@@ -185,7 +185,7 @@ func (b *Blockchain) ValidateBlock(block *Block, prevBlock *Block) (bool, error)
 	return true, nil
 }
 
-// CreateBlock adds a block to the chain.
+// AddBlock adds a block to the chain.
 func (b *Blockchain) AddBlock(block *Block) (bool, error) {
 	if block == nil {
 		return false, errors.New("Invalid block")
@@ -250,7 +250,7 @@ func CreateChainInstance(genesisHash []byte, currentHash []byte) (*Blockchain, e
 	}
 
 	// Now try to open the database.
-	db, err := badger.Open(badger.DefaultOptions(path + "/" + utils.CHAIN_DIR))
+	db, err := badger.Open(badger.DefaultOptions(path + "/" + utils.ChainDir))
 
 	if err != nil {
 		return nil, err

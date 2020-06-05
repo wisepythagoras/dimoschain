@@ -24,7 +24,7 @@ func GetChainDir(createIfNotExists bool) (string, error) {
 		return "", err
 	}
 
-	path := home + "/" + DIMOS_DIR
+	path := home + "/" + DimosDir
 
 	if createIfNotExists {
 		// Create the directory if it doesn't exist.
@@ -46,7 +46,7 @@ func ReadFileInChainDir(fileName string) ([]byte, error) {
 	}
 
 	// Compose the target file's path.
-	path := home + "/" + CHAIN_DIR + "/" + fileName
+	path := home + "/" + ChainDir + "/" + fileName
 
 	// Check if it exists.
 	if !CheckIfFileExists(path) {
@@ -59,12 +59,12 @@ func ReadFileInChainDir(fileName string) ([]byte, error) {
 
 // GetGenesisHash gets the genesis block hash from inside
 func GetGenesisHash() ([]byte, error) {
-	return ReadFileInChainDir(GENESIS)
+	return ReadFileInChainDir(Genesis)
 }
 
 // GetCurrentHash gets the current block's hash in the blockchain.
 func GetCurrentHash() ([]byte, error) {
-	return ReadFileInChainDir(CURRENT_HASH)
+	return ReadFileInChainDir(CurrentHash)
 }
 
 // WriteCurrentHash writes the current hash to the disk.
@@ -77,7 +77,7 @@ func WriteCurrentHash(hash []byte) error {
 	}
 
 	// Compose the target file's path.
-	path := home + "/" + CHAIN_DIR + "/" + CURRENT_HASH
+	path := home + "/" + ChainDir + "/" + CurrentHash
 
 	// Write the hash.
 	return WriteToFile(path, hash)
@@ -93,7 +93,7 @@ func WriteGenesisHash(hash []byte) error {
 	}
 
 	// Compose the target file's path.
-	path := home + "/" + CHAIN_DIR + "/" + GENESIS
+	path := home + "/" + ChainDir + "/" + Genesis
 
 	// Write the hash.
 	return WriteReadOnlyFile(path, hash)

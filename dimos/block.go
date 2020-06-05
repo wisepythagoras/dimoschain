@@ -173,7 +173,7 @@ func (b *Block) ComputeMerkleRoot(computeOnly bool) ([]byte, error) {
 	return b.MerkleRoot, nil
 }
 
-// VerifyMerkleTree verifies if a transaction is part of the merkle tree.
+// VerifyMerkleTreeTx verifies if a transaction is part of the merkle tree.
 func (b *Block) VerifyMerkleTreeTx(tx *Transaction) bool {
 	// Verify the content in the merkle tree.
 	vc, err := b.merkleTree.VerifyContent(tx)
