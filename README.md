@@ -3,7 +3,13 @@
     title="Logo of the Dimos project" width="200" height="200">
 </p>
 
-# Dimos
+<h1 align="center">Dimos</h1>
+
+<p align="center">
+    <a href="https://goreportcard.com/badge/github.com/wisepythagoras/dimoschain">
+        <img src="https://goreportcard.com/badge/github.com/wisepythagoras/dimoschain" />
+    </a>
+</p>
 
 Dimos (dee-mos, Δήμος: municipality, citizens) is a cryptocurrency based on a *Proof-of-Randomized-Delegation* consensus algorithm.
 
