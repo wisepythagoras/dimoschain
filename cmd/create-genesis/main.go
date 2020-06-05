@@ -35,8 +35,8 @@ func main() {
 	}
 	tx.Hash, err = tx.CalculateHash()
 
-        // This is the time of genesis.
-        date, _ := time.Parse(time.RFC3339, "2018-04-05T19:24:45Z")
+	// This is the time of genesis.
+	date, _ := time.Parse(time.RFC3339, "2018-04-05T19:24:45Z")
 
 	// Create the genesis block.
 	genesisBlock := dimos.Block{
