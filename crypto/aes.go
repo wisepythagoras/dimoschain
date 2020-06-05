@@ -8,8 +8,6 @@ import (
 	"io"
 )
 
-var IV = []byte{212, 126, 197, 12, 20, 238, 61, 80, 12, 162, 12, 45, 227, 27, 150, 43}
-
 // PadKey compensates for a key that is smaller than 32 bytes.
 func PadKey(key []byte) []byte {
 	// Nothing to do here.
