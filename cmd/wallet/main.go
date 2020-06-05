@@ -21,7 +21,7 @@ var encryptedFlag = []byte("enc")
 var walletFlag = []byte("wal")
 
 // Read the user's password from stdin.
-func getPassword(verify bool) ([]byte, error) {
+func getPassword(verify bool) []byte {
 	var password []byte
 	gotPassword := false
 
@@ -32,11 +32,11 @@ func getPassword(verify bool) ([]byte, error) {
 		tempPassword, err := terminal.ReadPassword(int(syscall.Stdin))
 
 		if err != nil {
-			return nil, err
+			log.Fatalln(err)
 		}
 
 		if !verify {
-			return tempPassword, nil
+			return tempPassword
 		}
 
 		fmt.Println("")
@@ -48,7 +48,7 @@ func getPassword(verify bool) ([]byte, error) {
 		fmt.Println("")
 
 		if err != nil {
-			return nil, err
+			log.Fatalln(err)
 		}
 
 		if bytes.Compare(tempPassword, confirmPassword) != 0 {
@@ -59,7 +59,7 @@ func getPassword(verify bool) ([]byte, error) {
 		}
 	}
 
-	return password, nil
+	return password
 }
 
 func main() {
@@ -109,7 +109,7 @@ func main() {
 
 			if *protect {
 				// Get the password from the terminal.
-				password, err := getPassword(true)
+				password := getPassword(true)
 
 				// Encrypt the payload with the password.
 				if bin, err = crypto.EncryptGCM(bin, crypto.PadKey(password)); err != nil {
@@ -138,7 +138,7 @@ func main() {
 
 		if bytes.Compare(bin[:3], encryptedFlag) == 0 {
 			// Get the password from the terminal.
-			password, err := getPassword(false)
+			password := getPassword(false)
 
 			// Decrypt the wallet
 			bin, err = crypto.DecryptGCM(bin[3:], crypto.PadKey(password))

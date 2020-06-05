@@ -35,6 +35,10 @@ func main() {
 	}
 	tx.Hash, err = tx.CalculateHash()
 
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	// This is the time of genesis.
 	date, _ := time.Parse(time.RFC3339, "2018-04-05T19:24:45Z")
 
