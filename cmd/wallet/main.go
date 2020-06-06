@@ -1,13 +1,10 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"flag"
 	"fmt"
 	"log"
-	"os"
-	"strings"
 	"syscall"
 
 	"github.com/vmihailenco/msgpack"
@@ -170,22 +167,6 @@ func main() {
 		fmt.Println("Public Key: ", wallet.KeyPair.GetPubKey())
 		fmt.Println("Private Key:", wallet.KeyPair.GetPrivKey())
 
-		// This is how we'll read user input.
-		reader := bufio.NewReader(os.Stdin)
-
-		for {
-			fmt.Printf("> ")
-			cmd, _ := reader.ReadString('\n')
-			cmd = strings.TrimSpace(cmd)
-
-			switch cmd {
-			case "help":
-				fmt.Println("Help")
-			case "balance":
-				fmt.Println("0")
-			default:
-				fmt.Printf("Unknonw command \"%s\"\n", cmd)
-			}
-		}
+		ShellSetup(&wallet)
 	}
 }
