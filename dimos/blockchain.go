@@ -236,6 +236,7 @@ func (b *Blockchain) AddBlock(block *Block) (bool, error) {
 
 	// Write the current hash into the current hash file on the disk.
 	utils.WriteCurrentHash(block.Hash)
+	b.CurrentHash = block.Hash
 
 	return true, nil
 }
