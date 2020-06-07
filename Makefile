@@ -29,5 +29,7 @@ install-deps:
 	go get golang.org/x/crypto/ripemd160
 	go get github.com/dgraph-io/badger
 	go get github.com/vmihailenco/msgpack
+	go get github.com/zetamatta/go-readline
+	go get github.com/mattn/go-colorable
 	mkdir -pv $(SRC)
 	ln -sv $(PWD) $(SRC)
