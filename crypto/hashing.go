@@ -52,7 +52,7 @@ func DoubleSHA256(b []byte) []byte {
 
 // AddrFromPubKey generates an address the same way it's generated for Bitcoin.
 func AddrFromPubKey(pubkey []byte) string {
-	a := append([]byte{0}, GetSHA256Hash(pubkey)...)
+	a := append([]byte{0}, pubkey...)
 
-	return Base58Encode(append(a, DoubleSHA256(a)[:5]...))
+	return Base58Encode(append(a, DoubleSHA256(a)...))
 }
