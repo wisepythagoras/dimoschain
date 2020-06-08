@@ -6,8 +6,23 @@ import (
 	"log"
 	"time"
 
+	"github.com/wisepythagoras/dimoschain/crypto"
 	"github.com/wisepythagoras/dimoschain/dimos"
 )
+
+func genKeyPair() *crypto.KeyPair {
+	// Create a new key pair instance.
+	keyPair := crypto.KeyPair{}
+
+	// Generate the new keypair.
+	err := keyPair.Generate()
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return &keyPair
+}
 
 func main() {
 	// Load the database.
@@ -27,12 +42,15 @@ func main() {
 		return
 	}
 
+	sender := genKeyPair()
+	receiver := genKeyPair()
+
 	// Create a test transaction.
 	tx := dimos.Transaction{
 		Hash:      nil,
 		Amount:    0.001,
-		From:      []byte("test1"),
-		To:        []byte("test2"),
+		From:      []byte(sender.GetAddr()),
+		To:        []byte(receiver.GetAddr()),
 		Signature: []byte("test1signature"),
 	}
 
