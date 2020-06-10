@@ -147,7 +147,7 @@ func (b *Block) ComputeMerkleRoot(computeOnly bool) ([]byte, error) {
 	}
 
 	// Create the new Merkle tree.
-	tree, err := merkletree.NewTree(list)
+	tree, err := merkletree.NewTreeWithHashStrategy(list, crypto.HashStrategy)
 
 	if err != nil {
 		return nil, err

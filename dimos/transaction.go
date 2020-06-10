@@ -54,7 +54,7 @@ func (tx Transaction) Equals(otherTx merkletree.Content) (bool, error) {
 func (tx Transaction) String() string {
 	return "Tx: " + hex.EncodeToString(tx.Hash) + "\n" +
 		" Amount: " + fmt.Sprintf("%.10f", tx.Amount) + "\n" +
-		" From: " + hex.EncodeToString(tx.From) + "\n" +
-		" To: " + hex.EncodeToString(tx.To) + "\n" +
+		" From: " + string(tx.From) + "\n" +
+		" To: " + string(tx.To) + "\n" +
 		" Signature: " + hex.EncodeToString(tx.Signature)
 }

@@ -45,6 +45,8 @@ func main() {
 	sender := genKeyPair()
 	receiver := genKeyPair()
 
+	fmt.Println(sender.GetAddr(), "->", receiver.GetAddr())
+
 	// Create a test transaction.
 	tx := dimos.Transaction{
 		Hash:      nil,

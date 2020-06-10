@@ -2,11 +2,17 @@ package crypto
 
 import (
 	"encoding/hex"
+	"hash"
 
 	"github.com/btcsuite/btcutil/base58"
 	"golang.org/x/crypto/sha3"
 
 	"crypto/sha256"
+)
+
+var (
+	// HashStrategy is the hash strategy for SHA3-512.
+	HashStrategy func() hash.Hash = sha3.New512
 )
 
 // Base58Encode encodes a series of bytes into a base58 string.
@@ -22,7 +28,7 @@ func Base58Decode(str string) []byte {
 // GetSHA3512Hash returns the SHA3-512 hash of a given string.
 func GetSHA3512Hash(str []byte) ([]byte, error) {
 	// Create a new sha object.
-	h := sha3.New512()
+	h := HashStrategy()
 
 	// Add our string to the hash.
 	if _, err := h.Write([]byte(str)); err != nil {
