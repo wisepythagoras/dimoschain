@@ -41,7 +41,7 @@ func (k *KeyPair) Sign(message []byte) (*ecdsa.Signature, error) {
 	}
 
 	// Get the SHA3-512 hash of the message.
-	hash, err := GetSHA3512Hash(message)
+	hash, err := GetSHA3384Hash(message)
 
 	if err != nil {
 		return nil, err
@@ -120,7 +120,7 @@ func VerifySignature(pub *secp256k1.PublicKey, sig []byte, msg []byte) bool {
 	}
 
 	// Get the SHA3-512 hash of the message.
-	hash, err := GetSHA3512Hash(msg)
+	hash, err := GetSHA3384Hash(msg)
 
 	if err != nil {
 		return false

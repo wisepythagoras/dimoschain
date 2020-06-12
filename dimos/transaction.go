@@ -34,7 +34,7 @@ func (tx Transaction) CalculateHash() ([]byte, error) {
 	hashFormat = append(hashFormat, tx.Signature...)
 
 	// Calculate the hash.
-	hash, err := crypto.GetSHA3512Hash(hashFormat)
+	hash, err := crypto.GetSHA3384Hash(hashFormat)
 
 	if err != nil {
 		return nil, err

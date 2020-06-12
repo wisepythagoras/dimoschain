@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	// HashStrategy is the hash strategy for SHA3-512.
-	HashStrategy func() hash.Hash = sha3.New512
+	// HashStrategy is the hash strategy for SHA3-384.
+	HashStrategy func() hash.Hash = sha3.New384
 )
 
 // Base58Encode encodes a series of bytes into a base58 string.
@@ -25,8 +25,8 @@ func Base58Decode(str string) []byte {
 	return base58.Decode(str)
 }
 
-// GetSHA3512Hash returns the SHA3-512 hash of a given string.
-func GetSHA3512Hash(str []byte) ([]byte, error) {
+// GetSHA3384Hash returns the SHA3-512 hash of a given string.
+func GetSHA3384Hash(str []byte) ([]byte, error) {
 	// Create a new sha object.
 	h := HashStrategy()
 

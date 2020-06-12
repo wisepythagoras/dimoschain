@@ -124,7 +124,7 @@ func (b *Block) ComputeHash(computeOnly bool) ([]byte, error) {
 	}
 
 	// Get the hash.
-	hash, err := crypto.GetSHA3512Hash(bin)
+	hash, err := crypto.GetSHA3384Hash(bin)
 
 	if err != nil {
 		return nil, err
