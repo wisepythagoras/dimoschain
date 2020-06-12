@@ -24,6 +24,16 @@ type Block struct {
 	merkleTree   *merkletree.MerkleTree
 }
 
+type blockMarshal struct {
+	IDx          int64         `json:"i"`
+	MerkleRoot   []byte        `json:"m"`
+	Timestamp    int64         `json:"ts"`
+	Transactions []Transaction `json:"txs"`
+	Hash         []byte        `json:"h"`
+	PrevHash     []byte        `json:"ph"`
+	Signature    []byte        `json:"s"`
+}
+
 // AddTransaction adds a transaction to the blockchain.
 func (b *Block) AddTransaction(tx *Transaction) bool {
 	if tx == nil {
@@ -57,7 +67,6 @@ func (b *Block) UpdateHash() error {
 
 // GetInterface returns the interface.
 func (b *Block) GetInterface(includeTx bool, omitHash bool) interface{} {
-	var returnable interface{}
 	var hash []byte
 
 	if omitHash {
@@ -66,44 +75,17 @@ func (b *Block) GetInterface(includeTx bool, omitHash bool) interface{} {
 		hash = b.Hash
 	}
 
+	returnable := blockMarshal{
+		IDx:        b.IDx,
+		MerkleRoot: b.MerkleRoot,
+		Timestamp:  b.Timestamp,
+		Hash:       hash,
+		PrevHash:   b.PrevHash,
+		Signature:  b.Signature,
+	}
+
 	if includeTx {
-		type BlockRep struct {
-			IDx          int64
-			MerkleRoot   []byte
-			Timestamp    int64
-			Transactions []Transaction
-			Hash         []byte
-			PrevHash     []byte
-			Signature    []byte
-		}
-
-		returnable = BlockRep{
-			IDx:          b.IDx,
-			MerkleRoot:   b.MerkleRoot,
-			Timestamp:    b.Timestamp,
-			Hash:         hash,
-			PrevHash:     b.PrevHash,
-			Signature:    b.Signature,
-			Transactions: b.Transactions,
-		}
-	} else {
-		type BlockRep struct {
-			IDx        int64
-			MerkleRoot []byte
-			Timestamp  int64
-			Hash       []byte
-			PrevHash   []byte
-			Signature  []byte
-		}
-
-		returnable = BlockRep{
-			IDx:        b.IDx,
-			MerkleRoot: b.MerkleRoot,
-			Timestamp:  b.Timestamp,
-			Hash:       hash,
-			PrevHash:   b.PrevHash,
-			Signature:  b.Signature,
-		}
+		returnable.Transactions = b.Transactions
 	}
 
 	return returnable
