@@ -6,7 +6,7 @@
 <h1 align="center">Dimos</h1>
 
 <p align="center">
-    <a href="https://goreportcard.com/badge/github.com/wisepythagoras/dimoschain">
+    <a href="https://goreportcard.com/report/github.com/wisepythagoras/dimoschain">
         <img src="https://goreportcard.com/badge/github.com/wisepythagoras/dimoschain" />
     </a>
 </p>
@@ -37,8 +37,8 @@ This should output something like this:
 
 ```
 badger 2019/03/21 11:41:01 INFO: All 0 tables opened in 0s
-2019/03/21 11:41:01 Merkle Root: a058b86554a94d7eaf219d18c4a87d455f6aa26ea0d066b5dc1b133b825c7b37 <nil>
-2019/03/21 11:41:01 Genesis Hash: 6c4327059ff87ca50ffba6c027d1bd9a5c622fbebd25644d8044a6f0886d95798c82855523fd2e3583f7df89fd880f13cb906c0d59a6d0845abb8d3312dbaa96 <nil>
+2019/03/21 11:41:01 Merkle Root: 97035fc67b851a86956f619f28c8ec7fce3b65e02a53ea175e4b7050ada4b2d4f7e53c34734321d59655a6647512ff91 <nil>
+2019/03/21 11:41:01 Genesis Hash: 8283d0e96d642cc2d390889097c98e2bf9b6bf249a0d1374810e240425e0fd0494def1da5f3cc9020a11afac6a3c92fe <nil>
 2019/03/21 11:41:01 Created genesis
 ```
 
