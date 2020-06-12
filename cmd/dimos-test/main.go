@@ -4,8 +4,8 @@ import (
 	"encoding/hex"
 	"fmt"
 
+	"github.com/wisepythagoras/dimoschain/core"
 	"github.com/wisepythagoras/dimoschain/crypto"
-	"github.com/wisepythagoras/dimoschain/dimos"
 )
 
 func main() {
@@ -42,7 +42,7 @@ func main() {
 
 	fmt.Println(crypto.AddrFromPubKey(keyPair.Public.SerializeCompressed()))
 
-	tx := dimos.Transaction{}
+	tx := core.Transaction{}
 
 	fmt.Println(tx)
 

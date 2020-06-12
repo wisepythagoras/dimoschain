@@ -3,12 +3,12 @@ package main
 import (
 	"log"
 
-	"github.com/wisepythagoras/dimoschain/dimos"
+	"github.com/wisepythagoras/dimoschain/core"
 )
 
 func main() {
 	// Load the database.
-	blockchain, err := dimos.InitChainDB()
+	blockchain, err := core.InitChainDB()
 
 	if err != nil {
 		log.Fatal(err)

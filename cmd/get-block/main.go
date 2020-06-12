@@ -5,7 +5,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/wisepythagoras/dimoschain/dimos"
+	"github.com/wisepythagoras/dimoschain/core"
 )
 
 func main() {
@@ -21,14 +21,14 @@ func main() {
 	}
 
 	// Load the database.
-	blockchain, err := dimos.InitChainDB()
+	blockchain, err := core.InitChainDB()
 
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
 
-	var block *dimos.Block
+	var block *core.Block
 
 	if *getCurrent {
 		block, err = blockchain.GetCurrentBlock()

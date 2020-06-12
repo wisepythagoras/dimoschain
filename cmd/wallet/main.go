@@ -8,8 +8,8 @@ import (
 	"syscall"
 
 	"github.com/vmihailenco/msgpack"
+	"github.com/wisepythagoras/dimoschain/core"
 	"github.com/wisepythagoras/dimoschain/crypto"
-	"github.com/wisepythagoras/dimoschain/dimos"
 	"github.com/wisepythagoras/dimoschain/utils"
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -97,7 +97,7 @@ func main() {
 
 		if len(*name) > 0 {
 			// Create a new keypair object.
-			wallet := dimos.Wallet{
+			wallet := core.Wallet{
 				KeyPair: &keyPair,
 			}
 
@@ -151,7 +151,7 @@ func main() {
 		}
 
 		// Create a wallet object.
-		wallet := dimos.Wallet{}
+		wallet := core.Wallet{}
 
 		// Unserialize the binary into a usable wallet object.
 		err = wallet.Unserialize(bin)

@@ -5,13 +5,13 @@ import (
 	"log"
 	"time"
 
-	"github.com/wisepythagoras/dimoschain/dimos"
+	"github.com/wisepythagoras/dimoschain/core"
 	"github.com/wisepythagoras/dimoschain/utils"
 )
 
 func main() {
 	// Load the database.
-	blockchain, err := dimos.CreateChainInstance(nil, nil)
+	blockchain, err := core.CreateChainInstance(nil, nil)
 
 	if err != nil {
 		log.Fatal(err)
@@ -27,7 +27,7 @@ func main() {
 	}
 
 	// Dummy transaction.
-	tx := dimos.Transaction{
+	tx := core.Transaction{
 		Amount:    0,
 		From:      []byte("0"),
 		To:        []byte("0"),
@@ -43,10 +43,10 @@ func main() {
 	date, _ := time.Parse(time.RFC3339, "2018-04-05T19:24:45Z")
 
 	// Create the genesis block.
-	genesisBlock := dimos.Block{
+	genesisBlock := core.Block{
 		IDx:          1,
 		Timestamp:    date.Unix(),
-		Transactions: []dimos.Transaction{},
+		Transactions: []core.Transaction{},
 		PrevHash:     []byte("0"),
 		Signature:    []byte("0"),
 	}

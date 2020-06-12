@@ -1,4 +1,4 @@
-package dimos
+package core
 
 import (
 	"github.com/vmihailenco/msgpack"

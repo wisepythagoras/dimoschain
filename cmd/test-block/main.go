@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/wisepythagoras/dimoschain/core"
 	"github.com/wisepythagoras/dimoschain/crypto"
-	"github.com/wisepythagoras/dimoschain/dimos"
 )
 
 func genKeyPair() *crypto.KeyPair {
@@ -26,7 +26,7 @@ func genKeyPair() *crypto.KeyPair {
 
 func main() {
 	// Load the database.
-	blockchain, err := dimos.InitChainDB()
+	blockchain, err := core.InitChainDB()
 
 	if err != nil {
 		log.Fatal(err)
@@ -48,7 +48,7 @@ func main() {
 	fmt.Println(sender.GetAddr(), "->", receiver.GetAddr())
 
 	// Create a test transaction.
-	tx := dimos.Transaction{
+	tx := core.Transaction{
 		Hash:      nil,
 		Amount:    0.001,
 		From:      []byte(sender.GetAddr()),
@@ -57,13 +57,13 @@ func main() {
 	}
 
 	// Construct the new block.
-	block := dimos.Block{
+	block := core.Block{
 		IDx:          currentBlock.IDx + 1,
 		Hash:         nil,
 		PrevHash:     currentBlock.Hash,
 		MerkleRoot:   nil,
 		Timestamp:    time.Now().Unix(),
-		Transactions: []dimos.Transaction{},
+		Transactions: []core.Transaction{},
 		Signature:    []byte("test"),
 	}
 

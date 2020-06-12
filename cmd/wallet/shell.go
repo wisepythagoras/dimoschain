@@ -7,14 +7,14 @@ import (
 
 	"github.com/mattn/go-colorable"
 
-	"github.com/wisepythagoras/dimoschain/dimos"
+	"github.com/wisepythagoras/dimoschain/core"
 	"github.com/wisepythagoras/dimoschain/utils"
 	"github.com/zetamatta/go-readline-ny"
 	"github.com/zetamatta/go-readline-ny/simplehistory"
 )
 
 // ShellSetup starts up a shell.
-func ShellSetup(wallet *dimos.Wallet) {
+func ShellSetup(wallet *core.Wallet) {
 	// We want to be able to save the history.
 	history := simplehistory.New()
 

@@ -1,4 +1,4 @@
-package dimos
+package core
 
 import (
 	"bytes"
