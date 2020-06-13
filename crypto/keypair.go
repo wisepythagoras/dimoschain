@@ -61,8 +61,10 @@ func (k *KeyPair) GetAddr() string {
 	// Get the public key bytes.
 	public := k.Public.SerializeCompressed()
 
+	addressBytes := append([]byte{0}, public...)
+
 	// Return the wallet address.
-	return Base58Encode(public)
+	return Base58Encode(addressBytes)
 }
 
 // GetPubKeyHashFromAddr gets the public key hash from the address.
