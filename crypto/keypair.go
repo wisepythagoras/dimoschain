@@ -62,7 +62,7 @@ func (k *KeyPair) GetAddr() string {
 	public := k.Public.SerializeCompressed()
 
 	// Return the wallet address.
-	return AddrFromPubKey(public)
+	return Base58Encode(public)
 }
 
 // GetPubKeyHashFromAddr gets the public key hash from the address.
@@ -85,6 +85,11 @@ func (k *KeyPair) GetPubKeyUncompressed() string {
 // GetPrivKey returns the private key.
 func (k *KeyPair) GetPrivKey() string {
 	return hex.EncodeToString(k.Private.Serialize())
+}
+
+// PubKeyFromAddress decodes an address and returns the public key.
+func PubKeyFromAddress(address string) (*secp256k1.PublicKey, error) {
+	return secp256k1.ParsePubKey(Base58Decode(address))
 }
 
 // PrivKeyFromBytes gets the private key from bytes.
