@@ -4,7 +4,6 @@ import (
 	"crypto/hmac"
 
 	"github.com/wisepythagoras/dimoschain/utils"
-	"golang.org/x/crypto/sha3"
 )
 
 // PRBG is the struct representing our pseud-random byte generator object.
@@ -21,10 +20,10 @@ func (p *PRBG) Next(n int) []byte {
 	payload = append(payload, utils.Int64ToBytes(p.index)...)
 
 	// Now we create the HMAC and write the payload.
-	h := hmac.New(sha3.New512, p.Seed)
+	h := hmac.New(HashStrategy, p.Seed)
 	h.Write(payload)
 
-	p.index += 1
+	p.index++
 
 	// Return the checksum.
 	return h.Sum(nil)[:n]

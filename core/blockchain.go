@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 
-	badger "github.com/dgraph-io/badger"
+	"github.com/wisepythagoras/dimoschain/db"
 	"github.com/wisepythagoras/dimoschain/utils"
 )
 
@@ -17,7 +17,7 @@ type Blockchain struct {
 	ID          int64  `json:"id"`
 	CurrentHash []byte `json:"ch"`
 	genesisHash []byte
-	db          *badger.DB
+	db          *db.DB
 }
 
 // GetDB returns the genesis hash.
@@ -98,18 +98,8 @@ func (b *Blockchain) GetBlock(hash []byte) (*Block, error) {
 		return nil, errors.New("Nil hash")
 	}
 
-	// Create a new transaction.
-	txn := b.db.NewTransaction(true)
-
 	// Get the item of the entry with the hash as the key.
-	item, err := txn.Get(hash)
-
-	if err != nil {
-		return nil, err
-	}
-
-	// Get the vaue from the item.
-	value, err := item.ValueCopy(nil)
+	value, err := b.db.Get(hash)
 
 	if err != nil {
 		return nil, err
@@ -213,10 +203,6 @@ func (b *Blockchain) AddBlock(block *Block) (bool, error) {
 		}
 	}
 
-	// Create a new transaction.
-	txn := b.db.NewTransaction(true)
-	defer txn.Discard()
-
 	// Get the serialized block.
 	serialized, err := block.GetSerialized(true, false)
 
@@ -225,12 +211,7 @@ func (b *Blockchain) AddBlock(block *Block) (bool, error) {
 	}
 
 	// Set the block onto the database.
-	if err = txn.Set(block.Hash, serialized); err != nil {
-		return false, err
-	}
-
-	// Commit the changes to the database.
-	if err = txn.Commit(); err != nil {
+	if _, err = b.db.Insert(block.Hash, serialized); err != nil {
 		return false, err
 	}
 
@@ -243,17 +224,13 @@ func (b *Blockchain) AddBlock(block *Block) (bool, error) {
 
 // CreateChainInstance creates a new instance of the blockchain object.
 func CreateChainInstance(genesisHash []byte, currentHash []byte) (*Blockchain, error) {
-	// Get the chain's directory.
-	path, err := utils.GetChainDir(true)
-
-	if err != nil {
-		return nil, err
+	// Now try to open the database.
+	blocksDb := db.DB{
+		Name: "blocks",
 	}
 
-	// Now try to open the database.
-	db, err := badger.Open(badger.DefaultOptions(path + "/" + utils.ChainDir))
-
-	if err != nil {
+	// Open the database.
+	if _, err := blocksDb.Open(); err != nil {
 		return nil, err
 	}
 
@@ -263,7 +240,7 @@ func CreateChainInstance(genesisHash []byte, currentHash []byte) (*Blockchain, e
 		ID:          0,
 		CurrentHash: currentHash,
 		genesisHash: genesisHash,
-		db:          db,
+		db:          &blocksDb,
 	}
 
 	return &blockchain, nil
