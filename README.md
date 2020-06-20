@@ -9,6 +9,12 @@
     <a href="https://goreportcard.com/report/github.com/wisepythagoras/dimoschain">
         <img src="https://goreportcard.com/badge/github.com/wisepythagoras/dimoschain" />
     </a>
+    <a href="https://github.com/wisepythagoras/dimoschain/issues">
+        <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat"/>
+    </a>
+    <a href="https://github.com/wisepythagoras/dimoschain/blob/master/LICENSE">
+        <img src="https://img.shields.io/badge/FOSS-100%25-4c1"/>
+    </a>
 </p>
 
 Dimos (dee-mos, Δήμος: municipality, citizens) is a cryptocurrency based on a *Proof-of-Randomized-Delegation* consensus algorithm.
