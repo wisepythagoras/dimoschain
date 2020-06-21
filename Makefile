@@ -1,6 +1,6 @@
 SRC := $(HOME)/go/src/github.com/wisepythagoras/
 
-all: validity wallet get-block genesis bg-service
+all: validity wallet get-block genesis bg-service node
 
 wallet:
 	make -C cmd/wallet
@@ -16,6 +16,9 @@ get-block:
 
 validity:
 	make -C cmd/check-validity
+
+node:
+	make -C cmd/node
 
 tests:
 	make -C cmd/test-block
