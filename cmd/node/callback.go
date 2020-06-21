@@ -7,6 +7,7 @@ import (
 	"github.com/cossacklabs/themis/gothemis/session"
 )
 
+// Callback defines a custom callbacks type.
 type Callback struct{}
 
 // GetPublicKeyForId returns the public key for the id.
