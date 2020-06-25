@@ -18,7 +18,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Println("Current state block hash is", hex.EncodeToString(blockchain.CurrentHash))
+	log.Println("Local chain current block", hex.EncodeToString(blockchain.CurrentHash))
 
 	// Start the server.
 	server := &Server{
