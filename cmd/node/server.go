@@ -74,6 +74,10 @@ func (s *Server) clientHandler(c net.Conn, serverID string, serverPrivateKey *ke
 		// Decrypt the encrypted data from the peer.
 		buf, sendPeer, err := secureSession.Unwrap(buf[:readBytes])
 
+		if nil != err {
+			log.Fatalln(err)
+		}
+
 		// Unpack the message.
 		message, err := proto.Unpack(buf)
 
