@@ -6,7 +6,7 @@ import (
 
 // Message defines what the protocol's message structure.
 type Message struct {
-	Command string `json:"command" msgpack:"c"`
+	Command int `json:"command" msgpack:"c"`
 
 	// In order to make this struct flexible and expand its use, we allow the payload
 	// to be any arbitrary type.

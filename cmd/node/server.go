@@ -9,6 +9,7 @@ import (
 
 	"github.com/cossacklabs/themis/gothemis/keys"
 	"github.com/cossacklabs/themis/gothemis/session"
+	"github.com/wisepythagoras/dimoschain/proto"
 )
 
 // Server defines the server struct.
@@ -68,18 +69,25 @@ func (s *Server) clientHandler(c net.Conn, serverID string, serverPrivateKey *ke
 			log.Fatalln(err)
 		}
 
+		// Decrypt the encrypted data from the peer.
 		buf, sendPeer, err := secureSession.Unwrap(buf[:readBytes])
+
+		// Unpack the message.
+		message, err := proto.Unpack(buf)
 
 		if nil != err {
 			log.Fatalln(err)
 		}
 
 		if !sendPeer {
-			if "finish" == string(buf[:]) {
+			// Was the exit command received?
+			if message.Command == proto.CmdExit {
 				return
 			}
 
-			fmt.Println("Received:", string(buf[:]))
+			fmt.Printf("Cmd: %d: %s\n", message.Command, message.Payload)
+
+			// Echo for now.
 			buf, err = secureSession.Wrap(buf)
 
 			if nil != err {

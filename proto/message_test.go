@@ -8,7 +8,7 @@ import (
 func TestPackUnpack(t *testing.T) {
 	// Create the test message.
 	msg := Message{
-		Command: "test",
+		Command: CmdTxSend,
 		Payload: 123,
 	}
 
@@ -32,6 +32,6 @@ func TestPackUnpack(t *testing.T) {
 	if p, _ := msg.Payload.(int); unpacked.Command != msg.Command || unpacked.Payload != int64(p) {
 		t.Log("unpacked.Command != msg.Command", unpacked.Command != msg.Command)
 		t.Log("unpacked.Payload != msg.Payload", unpacked.Payload != msg.Payload)
-		t.Errorf("Invalid unpack \"%s\", \"%s\"/\"%s\", \"%s\"", unpacked.Command, unpacked.Payload, msg.Command, msg.Payload)
+		t.Errorf("Invalid unpack \"%d\", \"%s\"/\"%d\", \"%s\"", unpacked.Command, unpacked.Payload, msg.Command, msg.Payload)
 	}
 }
