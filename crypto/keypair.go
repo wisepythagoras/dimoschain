@@ -6,6 +6,7 @@ import (
 
 	"github.com/decred/dcrd/dcrec/secp256k1"
 	"github.com/decred/dcrd/dcrec/secp256k1/ecdsa"
+	"github.com/decred/dcrd/dcrec/secp256k1/schnorr"
 )
 
 // Documentation:
@@ -32,23 +33,6 @@ func (k *KeyPair) Generate() error {
 	k.Public = key.PubKey()
 
 	return nil
-}
-
-// Sign simply signs a message.
-func (k *KeyPair) Sign(message []byte) (*ecdsa.Signature, error) {
-	if k.Private == nil {
-		return nil, errors.New("No private key loaded")
-	}
-
-	// Get the SHA3-512 hash of the message.
-	hash, err := GetSHA3384Hash(message)
-
-	if err != nil {
-		return nil, err
-	}
-
-	// Sign the message.
-	return ecdsa.Sign(k.Private, hash), nil
 }
 
 // GetPubKey returns the public key.
@@ -117,6 +101,43 @@ func ParsePubKey(pub []byte) (*KeyPair, error) {
 	return &KeyPair{pubkey, nil}, nil
 }
 
+// Sign simply signs a message.
+func (k *KeyPair) Sign(message []byte) (*ecdsa.Signature, error) {
+	if k.Private == nil {
+		return nil, errors.New("No private key loaded")
+	}
+
+	// Get the SHA3-512 hash of the message.
+	hash, err := GetSHA3384Hash(message)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Sign the message.
+	return ecdsa.Sign(k.Private, hash), nil
+}
+
+// SchnorrSign creates a Schnorr signature of the given data.
+func (k *KeyPair) SchnorrSign(data []byte) ([]byte, error) {
+	// Get the hash of the data.
+	hash, err := GetSHA3384Hash(data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Now we create the signature.
+	sig, err := schnorr.Sign(k.Private, hash)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Serialize the signature and return it.
+	return sig.Serialize(), nil
+}
+
 // VerifySignature verifies a DER signature.
 func VerifySignature(pub *secp256k1.PublicKey, sig []byte, msg []byte) bool {
 	// Parse the DER signature.
@@ -135,4 +156,24 @@ func VerifySignature(pub *secp256k1.PublicKey, sig []byte, msg []byte) bool {
 
 	// Verify the signature.
 	return signature.Verify(hash, pub)
+}
+
+// VerifySchnorrSignature verifies the given Schnorr signature.
+func VerifySchnorrSignature(pubKey *secp256k1.PublicKey, sig []byte, data []byte) bool {
+	// First let's parse the signature.
+	signature, err := schnorr.ParseSignature(sig)
+
+	if err != nil {
+		return false
+	}
+
+	// Compute the hash of the data that the signature represents.
+	hash, err := GetSHA3384Hash(data)
+
+	if err != nil {
+		return false
+	}
+
+	// Lastly, verify the signature and return the result.
+	return signature.Verify(hash, pubKey)
 }
