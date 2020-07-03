@@ -9,12 +9,14 @@ import (
 
 	"github.com/cossacklabs/themis/gothemis/keys"
 	"github.com/cossacklabs/themis/gothemis/session"
+	"github.com/wisepythagoras/dimoschain/core"
 	"github.com/wisepythagoras/dimoschain/proto"
 )
 
 // Server defines the server struct.
 type Server struct {
-	Port int
+	Port       int
+	Blockchain *core.Blockchain
 }
 
 // Listen starts the server and listens on the designated port.

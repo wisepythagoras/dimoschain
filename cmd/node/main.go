@@ -22,7 +22,8 @@ func main() {
 
 	// Start the server.
 	server := &Server{
-		Port: 8013,
+		Port:       8013,
+		Blockchain: blockchain,
 	}
 
 	// Start listening.
