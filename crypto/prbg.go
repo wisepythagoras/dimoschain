@@ -29,8 +29,8 @@ func (p *PRBG) Next(n int) []byte {
 	return h.Sum(nil)[:n]
 }
 
-// NextInt64 gets the next set of random integer.
-func (p *PRBG) NextInt64(n int) uint64 {
+// NextUInt64 gets the next set of random integer.
+func (p *PRBG) NextUInt64(n int) uint64 {
 	// Get the next set of bytes and return them as an integer.
 	return utils.BytesToUInt64(p.Next(n))
 }

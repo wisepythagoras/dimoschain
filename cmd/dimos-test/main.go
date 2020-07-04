@@ -52,7 +52,7 @@ func main() {
 
 	fmt.Println(hex.EncodeToString(prbg.Next(10)))
 	fmt.Println(hex.EncodeToString(prbg.Next(10)))
-	fmt.Println(prbg.NextInt64(10))
+	fmt.Println(prbg.NextUInt64(10))
 
 	fmt.Println("----")
 
