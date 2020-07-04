@@ -17,3 +17,9 @@ const Genesis = "genesis"
 
 // CurrentHash is the file that contains the current hash.
 const CurrentHash = "current_hash"
+
+// MaxUnitSupply defines the maximum unit supply, which is 1 qadrillion.
+const MaxUnitSupply = 1e15
+
+// UnitsInCoin The amount of units in a coin are 100 million. As a result, we can have 10 million coins.
+const UnitsInCoin = 1e8

@@ -8,7 +8,7 @@ import (
 
 // PRBG is the struct representing our pseud-random byte generator object.
 type PRBG struct {
-	index  int64
+	index  uint64
 	Seed   []byte
 	buffer []byte
 }
@@ -17,7 +17,7 @@ type PRBG struct {
 func (p *PRBG) Next(n int) []byte {
 	// The payload contains the seed, the current buffer and the index.
 	payload := append(p.Seed, p.buffer...)
-	payload = append(payload, utils.Int64ToBytes(p.index)...)
+	payload = append(payload, utils.UInt64ToBytes(p.index)...)
 
 	// Now we create the HMAC and write the payload.
 	h := hmac.New(HashStrategy, p.Seed)
@@ -30,7 +30,7 @@ func (p *PRBG) Next(n int) []byte {
 }
 
 // NextInt64 gets the next set of random integer.
-func (p *PRBG) NextInt64(n int) int64 {
+func (p *PRBG) NextInt64(n int) uint64 {
 	// Get the next set of bytes and return them as an integer.
-	return utils.BytesToInt64(p.Next(n))
+	return utils.BytesToUInt64(p.Next(n))
 }

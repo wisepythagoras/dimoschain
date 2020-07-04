@@ -50,7 +50,7 @@ func main() {
 	// Create a test transaction.
 	tx := core.Transaction{
 		Hash:      nil,
-		Amount:    0.001,
+		Amount:    10000,
 		From:      []byte(sender.GetAddr()),
 		To:        []byte(receiver.GetAddr()),
 		Signature: []byte("test1signature"),

@@ -13,21 +13,17 @@ import (
 // Transaction represents a single transaction from and to another wallet in the
 // dimosthenes network.
 type Transaction struct {
-	Hash      []byte  `json:"h"`
-	Amount    float64 `json:"a"`
-	From      []byte  `json:"f"`
-	To        []byte  `json:"t"`
-	Signature []byte  `json:"s"`
+	Hash      []byte `json:"h"`
+	Amount    uint64 `json:"a"`
+	From      []byte `json:"f"`
+	To        []byte `json:"t"`
+	Signature []byte `json:"s"`
 }
 
 // CalculateHash calculates the hash of this transaction.
 func (tx Transaction) CalculateHash() ([]byte, error) {
 	var hashFormat []byte
-	hashFormat, err := utils.Float64ToByte(tx.Amount)
-
-	if err != nil {
-		return nil, err
-	}
+	hashFormat = utils.UInt64ToBytes(tx.Amount)
 
 	hashFormat = append(hashFormat, tx.From...)
 	hashFormat = append(hashFormat, tx.To...)
@@ -53,7 +49,7 @@ func (tx Transaction) Equals(otherTx merkletree.Content) (bool, error) {
 // String returns the string representation of the transaction.
 func (tx Transaction) String() string {
 	return "Tx: " + hex.EncodeToString(tx.Hash) + "\n" +
-		" Amount: " + fmt.Sprintf("%.10f", tx.Amount) + "\n" +
+		" Amount: " + fmt.Sprintf("%.10f", (float64(tx.Amount)/utils.UnitsInCoin)) + "\n" +
 		" From: " + string(tx.From) + "\n" +
 		" To: " + string(tx.To) + "\n" +
 		" Signature: " + hex.EncodeToString(tx.Signature)

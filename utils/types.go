@@ -60,23 +60,23 @@ func BytesToFloat64(bytes []byte) float64 {
 	return float
 }
 
-// Int64ToBytes converts an int64 to []bytes.
-func Int64ToBytes(num int64) []byte {
+// UInt64ToBytes converts an uint64 to []bytes.
+func UInt64ToBytes(num uint64) []byte {
 	if endian == nil {
 		CheckEndian()
 	}
 
 	bytes := make([]byte, 8)
-	endian.PutUint64(bytes, uint64(num))
+	endian.PutUint64(bytes, num)
 
 	return bytes
 }
 
-// BytesToInt64 converts a byte array to an int64.
-func BytesToInt64(bytes []byte) int64 {
+// BytesToUInt64 converts a byte array to an int64.
+func BytesToUInt64(bytes []byte) uint64 {
 	if endian == nil {
 		CheckEndian()
 	}
 
-	return Abs(int64(endian.Uint64(bytes)))
+	return endian.Uint64(bytes)
 }
