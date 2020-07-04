@@ -111,3 +111,5 @@ bin/dimos-*
 bin/create-*
 bin/wallet
 *.wallet
+cover.out
+coverage.html
