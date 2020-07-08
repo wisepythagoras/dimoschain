@@ -6,7 +6,7 @@ wallet:
 	make -C cmd/wallet
 
 bg-service:
-	make -C cmd/dimos-bg-service
+	make -C cmd/background-service
 
 genesis:
 	make -C cmd/create-genesis
