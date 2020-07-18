@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	badger "github.com/dgraph-io/badger"
+	badger "github.com/dgraph-io/badger/v3"
 	"github.com/wisepythagoras/dimoschain/utils"
 )
 

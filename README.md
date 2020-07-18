@@ -25,13 +25,29 @@ The whitepaper is on its way.
 
 ## Getting Started
 
-Install the dependencies and build the package:
+### Install for development
+
+**Step 1**: Install Themis
+
+Install Themis following [the installation guide](https://docs.cossacklabs.com/themis/installation/installation-from-packages/)
+
+**Step 2**: Download dependencies
+
+Make sure that you have [Go](https://golang.org/) 1.14 installed then download the dependencies:
 
 ``` sh
-make install-deps && make && make tests
+make download-deps
 ```
 
-I don't currently use Go Modules for a few reason, first of which is that I couldn't find the specific versions of the dependencies that I wanted. It also nuked my environment when I tried using it. So until I'm forced to use it, I'll use Go Deps.
+**Step 3**: Build package
+
+Now you can build the package:
+
+``` sh
+make && make tests
+```
+
+### Test blockchain
 
 Now you can create the blockchain by initializing it.
 
