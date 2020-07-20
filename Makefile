@@ -1,4 +1,5 @@
-SRC := $(HOME)/go/src/github.com/wisepythagoras/
+GOPATH := $(shell go env GOPATH)
+SRC := $(GOPATH)/src/github.com/wisepythagoras/
 
 all: validity wallet get-block genesis bg-service node
 
