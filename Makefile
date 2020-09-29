@@ -35,5 +35,6 @@ install-deps:
 	go get github.com/vmihailenco/msgpack
 	go get github.com/zetamatta/go-readline-ny
 	go get github.com/mattn/go-colorable
+	go get github.com/mdp/qrterminal
 	mkdir -pv $(SRC)
 	ln -sv $(PWD) $(SRC)

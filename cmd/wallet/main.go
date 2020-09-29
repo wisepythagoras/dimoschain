@@ -163,7 +163,8 @@ func main() {
 		// Get the address.
 		addr := wallet.KeyPair.GetAddr()
 
-		fmt.Println("New Address:", addr)
+		fmt.Println("")
+		fmt.Println("Wallet Address:", addr)
 		fmt.Println("Public Key: ", wallet.KeyPair.GetPubKey())
 		fmt.Println("Private Key:", wallet.KeyPair.GetPrivKey())
 

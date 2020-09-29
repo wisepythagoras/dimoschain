@@ -45,9 +45,21 @@ func ShellSetup(wallet *core.Wallet) {
 			continue
 		}
 
-		// Just add an echo here.
-		fmt.Println(text)
+		if text == "qrcode-addr" {
+			GetQRCode(wallet.KeyPair.GetAddr())
+		} else if text == "qrcode-pk" {
+			GetQRCode(wallet.KeyPair.GetPrivKey())
+		} else if text == "help" {
+			fmt.Println("Available commands")
+			fmt.Println(" qrcode-addr\tGenerate a QR code of the wallet address")
+			fmt.Println(" qrcode-pk\tGenerate a QR code of the private key")
+			fmt.Println(" help\t\tShow this message")
+		} else {
+			// Just add an echo here.
+			fmt.Println(text)
+		}
 
 		history.Add(text)
 	}
 }
+
