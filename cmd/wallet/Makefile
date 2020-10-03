@@ -1,4 +1,4 @@
-all:
+all: install-deps
 	go build .
 	mv wallet ../../bin/
 

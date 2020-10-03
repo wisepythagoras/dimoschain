@@ -19,7 +19,6 @@ validity:
 	make -C cmd/check-validity
 
 node:
-	make -C cmd/node install-deps
 	make -C cmd/node
 
 tests:

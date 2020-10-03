@@ -81,3 +81,15 @@ func DecryptGCM(ciphertext []byte, key []byte) ([]byte, error) {
 	// Now decrypt the ciphertext.
 	return gcm.Open(nil, nonce, ciphertext, nil)
 }
+
+// CreateAEAD creates a new authenticated encryption with associated data.
+func CreateAEAD(key []byte) (cipher.AEAD, error) {
+	// Create the new cipher.
+	block, err := aes.NewCipher(key)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return cipher.NewGCM(block)
+}

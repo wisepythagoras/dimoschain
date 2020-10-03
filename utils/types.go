@@ -60,6 +60,30 @@ func BytesToFloat64(bytes []byte) float64 {
 	return float
 }
 
+// UInt32ToBytes converts an uint32 to []bytes.
+func UInt32ToBytes(num uint32) []byte {
+	if endian == nil {
+		CheckEndian()
+	}
+
+	bytes := make([]byte, 4)
+	endian.PutUint32(bytes, num)
+
+	return bytes
+}
+
+// UInt32ToBytesCustomSize converts an uint32 to []bytes with a custom output size.
+func UInt32ToBytesCustomSize(num uint32, size int) []byte {
+	if endian == nil {
+		CheckEndian()
+	}
+
+	bytes := make([]byte, size)
+	endian.PutUint32(bytes, num)
+
+	return bytes
+}
+
 // UInt64ToBytes converts an uint64 to []bytes.
 func UInt64ToBytes(num uint64) []byte {
 	if endian == nil {

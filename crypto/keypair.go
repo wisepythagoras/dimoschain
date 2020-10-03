@@ -7,6 +7,7 @@ import (
 	"github.com/decred/dcrd/dcrec/secp256k1"
 	"github.com/decred/dcrd/dcrec/secp256k1/ecdsa"
 	"github.com/decred/dcrd/dcrec/secp256k1/schnorr"
+	"github.com/wisepythagoras/dimoschain/utils"
 )
 
 // Documentation:
@@ -116,6 +117,45 @@ func (k *KeyPair) Sign(message []byte) (*ecdsa.Signature, error) {
 
 	// Sign the message.
 	return ecdsa.Sign(k.Private, hash), nil
+}
+
+// Encrypt a message with a temporary key and a shared secret derived from AEAD AES GCM.
+func (k *KeyPair) Encrypt(message []byte, recepientPubKey *secp256k1.PublicKey) ([]byte, error) {
+	// Generate the shared temporary key. This is a key that should only be used once.
+	tempKey, err := secp256k1.GeneratePrivateKey()
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Get the temporary public key.
+	tempPubKey := tempKey.PubKey().SerializeCompressed()
+
+	// Create the shared secred with ECDHE. It derives a shared symmetric key for the encryption
+	// of plaintext.
+	cipherKey, err := GetSHA3384Hash(secp256k1.GenerateSharedSecret(tempKey, recepientPubKey))
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Create a new AEAD.
+	aead, err := CreateAEAD(cipherKey)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// This will hold our nonce.
+	nonce := make([]byte, aead.NonceSize())
+
+	// Create the ciphertext.
+	ciphertext := utils.UInt32ToBytesCustomSize(uint32(len(tempPubKey)), len(tempPubKey)+4)
+
+	copy(ciphertext[4:], tempPubKey)
+
+	// Seal and return.
+	return aead.Seal(ciphertext, nonce, message, tempPubKey), nil
 }
 
 // SchnorrSign creates a Schnorr signature of the given data.
