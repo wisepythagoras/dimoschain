@@ -113,3 +113,6 @@ bin/wallet
 *.wallet
 cover.out
 coverage.html
+
+# vendor
+vendor/

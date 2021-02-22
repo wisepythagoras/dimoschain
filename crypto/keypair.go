@@ -4,9 +4,9 @@ import (
 	"encoding/hex"
 	"errors"
 
-	"github.com/decred/dcrd/dcrec/secp256k1"
-	"github.com/decred/dcrd/dcrec/secp256k1/ecdsa"
-	"github.com/decred/dcrd/dcrec/secp256k1/schnorr"
+	"github.com/decred/dcrd/dcrec/secp256k1/v3"
+	"github.com/decred/dcrd/dcrec/secp256k1/v3/ecdsa"
+	"github.com/decred/dcrd/dcrec/secp256k1/v3/schnorr"
 	"github.com/wisepythagoras/dimoschain/utils"
 )
 
