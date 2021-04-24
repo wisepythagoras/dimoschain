@@ -112,6 +112,7 @@ bin/create-*
 bin/wallet
 *.wallet
 cover.out
+coverage.out
 coverage.html
 
 # vendor

@@ -35,3 +35,15 @@ func TestPackUnpack(t *testing.T) {
 		t.Errorf("Invalid unpack \"%d\", \"%s\"/\"%d\", \"%s\"", unpacked.Command, unpacked.Payload, msg.Command, msg.Payload)
 	}
 }
+
+// TestUnpackError passes invalid packed data to the Unpack function and verifies it
+// returns an error.
+func TestUnpackError(t *testing.T) {
+	invalidData := []byte("abcdefghijklmnopqrstuvwxyz")
+
+	_, err := Unpack(invalidData)
+
+	if err == nil {
+		t.Errorf(("An error needs to be returned"))
+	}
+}

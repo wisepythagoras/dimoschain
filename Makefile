@@ -24,6 +24,9 @@ validity:
 node:
 	make -C cmd/node
 
-tests:
-	make -C cmd/test-block
-	make -C cmd/dimos-test
+test:
+	go test ./crypto/
+	go test ./proto/
+
+coverage:
+	./tools/gen_coverage.sh
