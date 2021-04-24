@@ -1,7 +1,7 @@
 GOPATH := $(shell go env GOPATH)
 SRC := $(GOPATH)/src/github.com/wisepythagoras/
 
-all: validity wallet get-block genesis bg-service node
+all: validity wallet get-block genesis bg-service node helpers
 
 download-deps:
 	GO111MODULE=on go mod vendor
@@ -23,6 +23,10 @@ validity:
 
 node:
 	make -C cmd/node
+
+helpers:
+	make -C cmd/test-block
+	make -C cmd/dimos-test
 
 test:
 	go test ./crypto/

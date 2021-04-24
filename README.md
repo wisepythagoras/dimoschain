@@ -44,7 +44,7 @@ make download-deps
 Now you can build the package:
 
 ``` sh
-make && make tests
+make all
 ```
 
 ### Test blockchain
