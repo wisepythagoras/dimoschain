@@ -62,4 +62,3 @@ func ShellSetup(wallet *core.Wallet) {
 		history.Add(text)
 	}
 }
-

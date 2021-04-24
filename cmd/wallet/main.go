@@ -168,6 +168,17 @@ func main() {
 		fmt.Println("Public Key: ", wallet.KeyPair.GetPubKey())
 		fmt.Println("Private Key:", wallet.KeyPair.GetPrivKey())
 
+		// Example of connecting to a node. This should be replaced by some logic that gets the list of
+		// available nodes and automatically connects to the best one.
+		// TODO: Figure out the logic for this.
+		// conn, err := ConnectToNode("127.0.0.1", 8013)
+
+		// if err != nil {
+		// 	log.Fatalln(err)
+		// }
+
+		// conn.SendCommand(proto.CmdUpdate, nil)
+
 		ShellSetup(&wallet)
 	}
 }

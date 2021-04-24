@@ -40,7 +40,8 @@ func (s *Server) Listen() {
 		conn, err := server.Accept()
 
 		if err != nil {
-			log.Fatalln(err)
+			fmt.Println(err)
+			continue
 		}
 
 		// Encode the public key.
@@ -58,7 +59,8 @@ func (s *Server) clientHandler(c net.Conn, serverID string, serverPrivateKey *ke
 	secureSession, err := session.New([]byte(serverID), serverPrivateKey, &Callback{})
 
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
+		return
 	}
 
 	for {
@@ -68,43 +70,48 @@ func (s *Server) clientHandler(c net.Conn, serverID string, serverPrivateKey *ke
 		readBytes, err := c.Read(buf)
 
 		if err != nil {
-			log.Fatalln(err)
+			log.Println("Net error", err)
+			return
 		}
 
 		// Decrypt the encrypted data from the peer.
 		buf, sendPeer, err := secureSession.Unwrap(buf[:readBytes])
 
-		if nil != err {
-			log.Fatalln(err)
-		}
-
-		// Unpack the message.
-		message, err := proto.Unpack(buf)
-
-		if nil != err {
-			log.Fatalln(err)
+		if err != nil {
+			log.Println(err)
+			continue
 		}
 
 		if !sendPeer {
+			// Unpack the message.
+			message, err := proto.Unpack(buf)
+
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+
 			// Was the exit command received?
 			if message.Command == proto.CmdExit {
 				return
 			}
 
-			fmt.Printf("Cmd: %d: %s\n", message.Command, message.Payload)
+			log.Printf("Cmd: %d: %s\n", message.Command, message.Payload)
 
 			// Echo for now.
 			buf, err = secureSession.Wrap(buf)
 
-			if nil != err {
-				log.Fatalln(err)
+			if err != nil {
+				log.Println(err)
+				continue
 			}
 		}
 
 		_, err = c.Write(buf)
 
 		if err != nil {
-			log.Fatalln(err)
+			log.Println("End", err)
+			continue
 		}
 	}
 }

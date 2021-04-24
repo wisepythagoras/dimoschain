@@ -26,8 +26,8 @@ github.com/coreos/etcd v3.3.10+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc
 github.com/coreos/go-etcd v2.0.0+incompatible/go.mod h1:Jez6KQU2B/sWsbdaef3ED8NzMklzPG4d5KIOhIy30Tk=
 github.com/coreos/go-semver v0.2.0/go.mod h1:nnelYz7RCh+5ahJtPPxZlU+153eP4D4r3EedlOD2RNk=
 github.com/cosiner/argv v0.1.0/go.mod h1:EusR6TucWKX+zFgtdUsKT2Cvg45K5rtpCcWz4hK06d8=
-github.com/cossacklabs/themis/gothemis v0.13.0 h1:l+3C/m38r3o6vkoe0NWgOGz9tj7qoG2iE4iCDonCsJY=
-github.com/cossacklabs/themis/gothemis v0.13.0/go.mod h1:6fvSguI8fMmChlgdG0cZywirhtTsRmp+/PsCWLDUID8=
+github.com/cossacklabs/themis/gothemis v0.13.2-0.20210421103642-105d416770f6 h1:iPwajPgVrDvdsvoNBusznWPeo1BNp8go6l+nVxDONjI=
+github.com/cossacklabs/themis/gothemis v0.13.2-0.20210421103642-105d416770f6/go.mod h1:6fvSguI8fMmChlgdG0cZywirhtTsRmp+/PsCWLDUID8=
 github.com/cpuguy83/go-md2man v1.0.10/go.mod h1:SmD6nW6nTyfqj6ABTjUi3V3JVMnlJmwcJI5acqYI6dE=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v0.0.0-20171005155431-ecdeabc65495/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
