@@ -9,6 +9,6 @@ while read file; do
     lines=$(echo $res | awk '{ print $1 }')
     lines=$(($lines + $total))
     total=$lines
-done < <(find . -name "*.go")
+done < <(find . -name "*.go" -not -path "./vendor/*")
 
 echo -e "\n$lines total lines of code"
