@@ -37,7 +37,7 @@ func ConnectToNode(ip string, port int) (*Connection, error) {
 	pubKey := base64.StdEncoding.EncodeToString(clientKeyPair.Public.Value)
 
 	// This is what initiates a secure session.
-	secureSession, err := session.New([]byte(pubKey), clientKeyPair.Private, &Callback{})
+	secureSession, err := session.New([]byte(pubKey), clientKeyPair.Private, &proto.Callback{})
 
 	if err != nil {
 		return nil, err
@@ -93,6 +93,7 @@ func ConnectToNode(ip string, port int) (*Connection, error) {
 	return connection, nil
 }
 
+// Connection is the type that handles a connection with a node.
 type Connection struct {
 	ip            string
 	port          int

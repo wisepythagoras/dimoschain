@@ -1,4 +1,4 @@
-package main
+package proto
 
 import (
 	"encoding/base64"

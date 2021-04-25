@@ -56,7 +56,7 @@ func (s *Server) Listen() {
 // internal.
 func (s *Server) clientHandler(c net.Conn, serverID string, serverPrivateKey *keys.PrivateKey) {
 	// Create a secure session.
-	secureSession, err := session.New([]byte(serverID), serverPrivateKey, &Callback{})
+	secureSession, err := session.New([]byte(serverID), serverPrivateKey, &proto.Callback{})
 
 	if err != nil {
 		log.Println(err)
