@@ -12,5 +12,5 @@ require (
 	github.com/mdp/qrterminal v1.0.1
 	github.com/vmihailenco/msgpack/v4 v4.3.12
 	github.com/zetamatta/go-readline-ny v0.1.2
-	golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83
+	golang.org/x/crypto v0.1.0
 )
