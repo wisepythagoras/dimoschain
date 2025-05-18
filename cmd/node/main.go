@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/rand"
 	"encoding/hex"
 	"log"
 
@@ -24,8 +25,10 @@ func main() {
 	server := &Server{
 		Port:       8013,
 		Blockchain: blockchain,
+		randomness: rand.Reader,
 	}
 
 	// Start listening.
-	server.Listen()
+	// server.Listen()
+	server.Create()
 }
