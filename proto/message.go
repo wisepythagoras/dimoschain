@@ -1,7 +1,7 @@
 package proto
 
 import (
-	"github.com/vmihailenco/msgpack/v4"
+	"github.com/vmihailenco/msgpack/v5"
 )
 
 // Message defines what the protocol's message structure.

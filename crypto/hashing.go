@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"hash"
 
-	"github.com/btcsuite/btcutil/base58"
+	"github.com/btcsuite/btcd/btcutil/base58"
 	"golang.org/x/crypto/sha3"
 
 	"crypto/sha256"

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/cbergoon/merkletree"
-	"github.com/vmihailenco/msgpack/v4"
+	"github.com/vmihailenco/msgpack/v5"
 	"github.com/wisepythagoras/dimoschain/crypto"
 )
 

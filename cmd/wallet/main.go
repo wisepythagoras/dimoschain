@@ -7,7 +7,7 @@ import (
 	"log"
 	"syscall"
 
-	"github.com/vmihailenco/msgpack/v4"
+	"github.com/vmihailenco/msgpack/v5"
 	"github.com/wisepythagoras/dimoschain/core"
 	"github.com/wisepythagoras/dimoschain/crypto"
 	"github.com/wisepythagoras/dimoschain/utils"

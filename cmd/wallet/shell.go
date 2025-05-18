@@ -3,14 +3,15 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"strings"
 
 	"github.com/mattn/go-colorable"
 
+	"github.com/nyaosorg/go-readline-ny"
+	"github.com/nyaosorg/go-readline-ny/simplehistory"
 	"github.com/wisepythagoras/dimoschain/core"
 	"github.com/wisepythagoras/dimoschain/utils"
-	"github.com/zetamatta/go-readline-ny"
-	"github.com/zetamatta/go-readline-ny/simplehistory"
 )
 
 // ShellSetup starts up a shell.
@@ -20,8 +21,11 @@ func ShellSetup(wallet *core.Wallet) {
 
 	// Create the new readline editor.
 	editor := readline.Editor{
-		Prompt: func() (int, error) {
-			return fmt.Print("> ")
+		// Prompt: func() (int, error) {
+		// 	return fmt.Print("> ")
+		// },
+		PromptWriter: func(w io.Writer) (int, error) {
+			return io.WriteString(w, "\x1B[36;22m$ ") // print `$ ` with cyan
 		},
 		Writer:  colorable.NewColorableStdout(),
 		History: history,
