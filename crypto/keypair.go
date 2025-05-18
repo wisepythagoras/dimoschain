@@ -4,9 +4,9 @@ import (
 	"encoding/hex"
 	"errors"
 
-	"github.com/decred/dcrd/dcrec/secp256k1/v3"
-	"github.com/decred/dcrd/dcrec/secp256k1/v3/ecdsa"
-	"github.com/decred/dcrd/dcrec/secp256k1/v3/schnorr"
+	"github.com/decred/dcrd/dcrec/secp256k1/v4"
+	"github.com/decred/dcrd/dcrec/secp256k1/v4/ecdsa"
+	"github.com/decred/dcrd/dcrec/secp256k1/v4/schnorr"
 	"github.com/wisepythagoras/dimoschain/utils"
 )
 
@@ -58,7 +58,7 @@ func (k *KeyPair) GetPubKeyHashFromAddr(str string) ([]byte, error) {
 	decoded := Base58Decode(str)
 
 	if len(decoded) == 0 || len(decoded) < 38 {
-		return nil, errors.New("Invalid address")
+		return nil, errors.New("invalid address")
 	}
 
 	return decoded[1:33], nil
@@ -105,7 +105,7 @@ func ParsePubKey(pub []byte) (*KeyPair, error) {
 // Sign simply signs a message.
 func (k *KeyPair) Sign(message []byte) (*ecdsa.Signature, error) {
 	if k.Private == nil {
-		return nil, errors.New("No private key loaded")
+		return nil, errors.New("no private key loaded")
 	}
 
 	// Get the SHA3-512 hash of the message.
