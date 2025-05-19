@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	badger "github.com/dgraph-io/badger/v3"
+	badger "github.com/dgraph-io/badger/v4"
 	"github.com/wisepythagoras/dimoschain/utils"
 )
 
@@ -50,7 +50,7 @@ func (d *DB) Open() (bool, error) {
 // Insert creates a new entry in the database.
 func (d *DB) Insert(key []byte, value []byte) (bool, error) {
 	if d.db == nil {
-		return false, errors.New("Uninitialized database")
+		return false, errors.New("uninitialized database")
 	}
 
 	// Create a new transaction.
@@ -75,7 +75,7 @@ func (d *DB) Insert(key []byte, value []byte) (bool, error) {
 // Get retrieves the contents of a specific key in the database.
 func (d *DB) Get(key []byte) ([]byte, error) {
 	if d.db == nil {
-		return nil, errors.New("Uninitialized database")
+		return nil, errors.New("uninitialized database")
 	}
 
 	// Create a new transaction.
