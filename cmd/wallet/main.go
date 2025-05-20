@@ -11,7 +11,7 @@ import (
 	"github.com/wisepythagoras/dimoschain/core"
 	"github.com/wisepythagoras/dimoschain/crypto"
 	"github.com/wisepythagoras/dimoschain/utils"
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 var encryptedFlag = []byte("enc")
@@ -26,7 +26,7 @@ func getPassword(verify bool) []byte {
 		fmt.Print("Enter Password: ")
 
 		// Read the password
-		tempPassword, err := terminal.ReadPassword(int(syscall.Stdin))
+		tempPassword, err := term.ReadPassword(int(syscall.Stdin))
 
 		if err != nil {
 			log.Fatalln(err)
@@ -40,7 +40,7 @@ func getPassword(verify bool) []byte {
 		fmt.Print("Confirm Password: ")
 
 		// Now read the confirmation.
-		confirmPassword, err := terminal.ReadPassword(int(syscall.Stdin))
+		confirmPassword, err := term.ReadPassword(int(syscall.Stdin))
 
 		fmt.Println("")
 

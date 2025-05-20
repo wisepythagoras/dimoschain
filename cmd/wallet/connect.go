@@ -1,21 +1,105 @@
 package main
 
 import (
-	"encoding/base64"
-	"errors"
+	"bufio"
+	"context"
 	"fmt"
+	"io"
+	"log"
 	"net"
-	"strconv"
 
-	"github.com/cossacklabs/themis/gothemis/keys"
 	"github.com/cossacklabs/themis/gothemis/session"
+	"github.com/libp2p/go-libp2p"
+	"github.com/libp2p/go-libp2p/core/crypto"
+	"github.com/libp2p/go-libp2p/core/host"
+	"github.com/libp2p/go-libp2p/core/peer"
+	"github.com/libp2p/go-libp2p/core/peerstore"
+	"github.com/multiformats/go-multiaddr"
+	"github.com/wisepythagoras/dimoschain/core"
 	"github.com/wisepythagoras/dimoschain/proto"
-	"github.com/wisepythagoras/dimoschain/utils"
 )
 
+// Server defines the server struct.
+type Client struct {
+	Port       int
+	Address    string
+	Blockchain *core.Blockchain
+	randomness io.Reader
+}
+
+func (c *Client) Create() error {
+	ctx, cancel := context.WithCancel(context.Background())
+	_ = ctx
+	defer cancel()
+
+	prvKey, _, err := crypto.GenerateKeyPairWithReader(crypto.Ed25519, 256, c.randomness)
+
+	if err != nil {
+		return err
+	}
+
+	sourceMultiAddr, _ := multiaddr.NewMultiaddr(fmt.Sprintf("/ip4/0.0.0.0/tcp/%d", c.Port))
+
+	h, err := libp2p.New(
+		libp2p.ListenAddrs(sourceMultiAddr),
+		libp2p.Identity(prvKey),
+	)
+
+	rw, err := c.createInstanceAndConnect(ctx, h, c.Address)
+
+	if err != nil {
+		return err
+	}
+
+	// Create a thread to read and write data.
+	go writeData(rw)
+	go readData(rw)
+
+	// Wait forever
+	select {}
+}
+
+func (c *Client) createInstanceAndConnect(ctx context.Context, h host.Host, destination string) (*bufio.ReadWriter, error) {
+	log.Println("Node multiaddress:")
+
+	for _, la := range h.Addrs() {
+		log.Printf(" - %v\n", la)
+	}
+
+	log.Println()
+
+	maddr, err := multiaddr.NewMultiaddr(destination)
+
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	info, err := peer.AddrInfoFromP2pAddr(maddr)
+
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	h.Peerstore().AddAddrs(info.ID, info.Addrs, peerstore.PermanentAddrTTL)
+
+	s, err := h.NewStream(context.Background(), info.ID, "/dimos/1.0.0")
+
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	// Create a buffered stream so that read and writes are non-blocking.
+	rw := bufio.NewReadWriter(bufio.NewReader(s), bufio.NewWriter(s))
+
+	return rw, nil
+}
+
 // ConnectToNode connects to the node with the specified IP address and port.
-func ConnectToNode(ip string, port int) (*Connection, error) {
-	// Validate the inputs.
+/*func ConnectToNode(ip string, port int) (*Connection, error) {
+	// Validate the cnputs.
 	if !utils.IsIPAddressValid(ip) || port <= 0 || port > 65535 {
 		return nil, errors.New("Invalid IP address or port")
 	}
@@ -91,7 +175,7 @@ func ConnectToNode(ip string, port int) (*Connection, error) {
 	}
 
 	return connection, nil
-}
+}*/
 
 // Connection is the type that handles a connection with a node.
 type Connection struct {
