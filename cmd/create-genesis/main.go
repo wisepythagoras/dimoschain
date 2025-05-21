@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/hex"
 	"log"
+	"math/rand/v2"
 	"time"
 
 	"github.com/wisepythagoras/dimoschain/core"
@@ -28,9 +29,12 @@ func main() {
 
 	// Dummy transaction.
 	tx := core.Transaction{
+		Type:      core.TxEmpty,
 		Amount:    0,
 		From:      []byte("0"),
 		To:        []byte("0"),
+		Nonce:     uint64(rand.Int64()),
+		Timestamp: time.Now().UnixMilli(),
 		Signature: []byte("0"),
 	}
 	tx.Hash, err = tx.CalculateHash()

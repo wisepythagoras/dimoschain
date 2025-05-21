@@ -4,20 +4,34 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
+	"time"
 
 	"github.com/cbergoon/merkletree"
 	"github.com/wisepythagoras/dimoschain/crypto"
 	"github.com/wisepythagoras/dimoschain/utils"
 )
 
+type TxType uint8
+
+const (
+	TxEmpty TxType = iota
+	TxTransfer
+	TxContractCreate
+	TxContractCall
+)
+
 // Transaction represents a single transaction from and to another wallet in the
 // dimosthenes network.
 type Transaction struct {
 	Hash      []byte `json:"h"`
+	Type      TxType `json:"tt"`
 	Amount    uint64 `json:"a"`
 	From      []byte `json:"f"`
-	To        []byte `json:"t"`
-	Signature []byte `json:"s"`
+	To        []byte `json:"d"`
+	Nonce     uint64 `json:"n"`
+	Timestamp int64  `json:"t"`
+	Payload   []byte `json:"p"`
+	Signature []byte `json:"s"` // TODO: Use Dilithium/SPHINCS+ for quantum-safe crypto.
 }
 
 // CalculateHash calculates the hash of this transaction.
@@ -27,6 +41,9 @@ func (tx Transaction) CalculateHash() ([]byte, error) {
 
 	hashFormat = append(hashFormat, tx.From...)
 	hashFormat = append(hashFormat, tx.To...)
+	hashFormat = append(hashFormat, utils.UInt64ToBytes(tx.Amount)...)
+	hashFormat = append(hashFormat, utils.UInt64ToBytes(tx.Nonce)...)
+	hashFormat = append(hashFormat, utils.UInt64ToBytes(uint64(tx.Type))...)
 	hashFormat = append(hashFormat, tx.Signature...)
 
 	// Calculate the hash.
@@ -48,9 +65,14 @@ func (tx Transaction) Equals(otherTx merkletree.Content) (bool, error) {
 
 // String returns the string representation of the transaction.
 func (tx Transaction) String() string {
-	return "Tx: " + hex.EncodeToString(tx.Hash) + "\n" +
-		" Amount: " + fmt.Sprintf("%.10f", (float64(tx.Amount)/utils.UnitsInCoin)) + "\n" +
-		" From: " + string(tx.From) + "\n" +
-		" To: " + string(tx.To) + "\n" +
-		" Signature: " + hex.EncodeToString(tx.Signature)
+	return fmt.Sprintf(
+		"Tx: %s\n Amount: %s\n From: %s\n To: %s\n Nonce: %d\n Ts: %s\n Signature: %s\n",
+		hex.EncodeToString(tx.Hash),
+		fmt.Sprintf("%.10f", (float64(tx.Amount)/utils.UnitsInCoin)),
+		string(tx.From),
+		string(tx.To),
+		tx.Nonce,
+		time.UnixMilli(tx.Timestamp),
+		hex.EncodeToString(tx.Signature),
+	)
 }
