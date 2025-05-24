@@ -63,7 +63,9 @@ func (tx Transaction) Equals(otherTx merkletree.Content) (bool, error) {
 	return bytes.Compare(tx.Hash, otherTx.(*Transaction).Hash) == 1, nil
 }
 
-func (tx *Transaction) f() {}
+func (tx *Transaction) ParseContractCreatePayload() {}
+
+func (tx *Transaction) ParseContractCallPayload() {}
 
 // String returns the string representation of the transaction.
 func (tx Transaction) String() string {
