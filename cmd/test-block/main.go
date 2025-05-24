@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log"
+	"math/rand/v2"
 	"time"
 
 	"github.com/wisepythagoras/dimoschain/core"
@@ -54,6 +55,9 @@ func main() {
 		From:      []byte(sender.GetAddr()),
 		To:        []byte(receiver.GetAddr()),
 		Signature: []byte("test1signature"),
+		Type:      core.TxTransfer,
+		Timestamp: time.Now().UnixMilli(),
+		Nonce:     uint64(rand.Int64()),
 	}
 
 	// Construct the new block.
@@ -62,8 +66,8 @@ func main() {
 		Hash:         nil,
 		PrevHash:     currentBlock.Hash,
 		MerkleRoot:   nil,
-		Timestamp:    time.Now().Unix(),
-		Transactions: []core.Transaction{},
+		Timestamp:    time.Now().UnixMilli(),
+		Transactions: []*core.Transaction{},
 		Signature:    []byte("test"),
 	}
 

@@ -50,7 +50,7 @@ func main() {
 	genesisBlock := core.Block{
 		IDx:          1,
 		Timestamp:    date.Unix(),
-		Transactions: []core.Transaction{},
+		Transactions: []*core.Transaction{},
 		PrevHash:     []byte("0"),
 		Signature:    []byte("0"),
 	}

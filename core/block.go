@@ -14,24 +14,24 @@ import (
 
 // Block represents each individual block in the chain.
 type Block struct {
-	IDx          int64         `json:"i"`
-	MerkleRoot   []byte        `json:"m"`
-	Timestamp    int64         `json:"ts"`
-	Transactions []Transaction `json:"txs"`
-	Hash         []byte        `json:"h"`
-	PrevHash     []byte        `json:"ph"`
-	Signature    []byte        `json:"s"`
+	IDx          int64          `json:"i"`
+	MerkleRoot   []byte         `json:"m"`
+	Timestamp    int64          `json:"ts"`
+	Transactions []*Transaction `json:"txs"`
+	Hash         []byte         `json:"h"`
+	PrevHash     []byte         `json:"ph"`
+	Signature    []byte         `json:"s"`
 	merkleTree   *merkletree.MerkleTree
 }
 
 type blockMarshal struct {
-	IDx          int64         `json:"i"`
-	MerkleRoot   []byte        `json:"m"`
-	Timestamp    int64         `json:"ts"`
-	Transactions []Transaction `json:"txs"`
-	Hash         []byte        `json:"h"`
-	PrevHash     []byte        `json:"ph"`
-	Signature    []byte        `json:"s"`
+	IDx          int64          `json:"i"`
+	MerkleRoot   []byte         `json:"m"`
+	Timestamp    int64          `json:"ts"`
+	Transactions []*Transaction `json:"txs"`
+	Hash         []byte         `json:"h"`
+	PrevHash     []byte         `json:"ph"`
+	Signature    []byte         `json:"s"`
 }
 
 // AddTransaction adds a transaction to the blockchain.
@@ -41,7 +41,7 @@ func (b *Block) AddTransaction(tx *Transaction) bool {
 	}
 
 	// Add the transaction.
-	b.Transactions = append(b.Transactions, *tx)
+	b.Transactions = append(b.Transactions, tx)
 
 	// Update the Merkle root and the hash.
 	b.UpdateHash()

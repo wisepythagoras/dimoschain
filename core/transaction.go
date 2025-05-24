@@ -35,7 +35,7 @@ type Transaction struct {
 }
 
 // CalculateHash calculates the hash of this transaction.
-func (tx Transaction) CalculateHash() ([]byte, error) {
+func (tx *Transaction) CalculateHash() ([]byte, error) {
 	var hashFormat []byte
 	hashFormat = utils.UInt64ToBytes(tx.Amount)
 
@@ -60,19 +60,22 @@ func (tx Transaction) CalculateHash() ([]byte, error) {
 
 // Equals checks two transactions for equality.
 func (tx Transaction) Equals(otherTx merkletree.Content) (bool, error) {
-	return bytes.Compare(tx.Hash, otherTx.(Transaction).Hash) == 1, nil
+	return bytes.Compare(tx.Hash, otherTx.(*Transaction).Hash) == 1, nil
 }
+
+func (tx *Transaction) f() {}
 
 // String returns the string representation of the transaction.
 func (tx Transaction) String() string {
 	return fmt.Sprintf(
-		"Tx: %s\n Amount: %s\n From: %s\n To: %s\n Nonce: %d\n Ts: %s\n Signature: %s\n",
+		"Tx: %s\n Amount: %s\n From: %s\n To: %s\n Nonce: %d\n Ts: %s\n Type: %d\n Signature: %s\n",
 		hex.EncodeToString(tx.Hash),
 		fmt.Sprintf("%.10f", (float64(tx.Amount)/utils.UnitsInCoin)),
 		string(tx.From),
 		string(tx.To),
 		tx.Nonce,
 		time.UnixMilli(tx.Timestamp),
+		tx.Type,
 		hex.EncodeToString(tx.Signature),
 	)
 }
